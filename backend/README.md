@@ -28,4 +28,14 @@ Configure poetry to create virtual environments inside the project's root direct
 ```bash
 poetry config virtualenvs.in-project true
 ```
+# Using pgadmin locally
+After logging into pgadmin, create a server by right clicking on `Server`. 
+Run `docker inspect postgreslocal | grep IP` to retrieve the IP address of your local postgres container
+Under the connection tab fill in the `Host name/address` with the IP address that you have just retrieved
+Change the username to `postgres` and password to `mysecretpassword`
+
+## Database
+A default database called `postgres` will be created
+If `foodDestroyingSystem` does not exists create it by right clicking `Database`
+A prompt will appear and just populate the `database` field with `fooddestroyingsystem`
 
