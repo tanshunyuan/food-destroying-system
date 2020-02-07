@@ -17,10 +17,12 @@ class Employee(db.Model):
     status = db.Column(db.Boolean)
     dateJoined = db.Column(db.DateTime)
     gender = db.Column(db.String)
+    password = db.Column(db.String)
 
 
 class EmployeeSchema(ModelSchema):
-    model = Employee
+    class Meta:
+        model = Employee
 
 
 def create_employee(data):
@@ -29,13 +31,13 @@ def create_employee(data):
                             contactNumber=data['contactNumber'],
                             dateJoined=data['dateJoined'],
                             status=data['status'],
+                            password=data['password'],
                             gender=data['gender'])
     session.add(new_employee)
     logger.info('Attempting to create employee')
     try:
         session.commit()
-        logger.success('Successfully created {} employee',
-                       data['name'])
+        logger.success('Successfully created {} employee', data['name'])
         didSucceed = True
     except Exception as e:
         logger.error(e)
@@ -44,3 +46,14 @@ def create_employee(data):
     finally:
         session.close()
         return didSucceed
+
+
+def get_employee(name):
+    logger.info('Attempting to get employee')
+    try:
+        result = session.query(Employee).filter_by(name=name).first()
+        return result
+    except Exception as e:
+        logger.error(e)
+        session.rollback()
+        raise

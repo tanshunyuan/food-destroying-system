@@ -76,13 +76,14 @@ def get_all_food():
     except Exception as e:
         logger.error(e)
         session.rollback()
+        return e
         raise
 
 
-def get_food(data):
+def get_food(id):
     logger.info('Attempting to get food')
     try:
-        result = session.query(Food).filter_by(data['id']).first()
+        result = session.query(Food).filter_by(id=id).first()
         return result
     except Exception as e:
         logger.error(e)

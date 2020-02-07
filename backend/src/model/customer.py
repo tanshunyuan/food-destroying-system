@@ -14,24 +14,27 @@ class Customer(db.Model):
     address = db.Column(db.String)
     email = db.Column(db.String, unique=True)
     contactNumber = db.Column(db.Integer)
+    password = db.Column(db.String)
 
 
 class CustomerSchema(ModelSchema):
-    model = Customer
+    class Meta:
+        model = Customer
 
 
 def create_customer(data):
+    didSucceed = None
     new_customer = Customer(name=data['name'],
                             address=data['address'],
                             email=data['email'],
+                            password=data['password'],
                             contactNumber=data['contactNumber'])
     session.add(new_customer)
     logger.info('Attempting to create customer')
     try:
         session.commit()
-        logger.success('Successfully created {} customer',
-                       data['name'])
-        didSucceed = True
+        logger.success('Successfully created {} customer', data['name'])
+        didSucceed = new_customer.id
     except Exception as e:
         logger.error(e)
         session.rollback()
@@ -39,3 +42,14 @@ def create_customer(data):
     finally:
         session.close()
         return didSucceed
+
+
+def get_customer(email):
+    logger.info('Attempting to get customer')
+    try:
+        result = session.query(Customer).filter_by(email=email).first()
+        return result
+    except Exception as e:
+        logger.error(e)
+        session.rollback()
+        raise

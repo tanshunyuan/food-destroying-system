@@ -101,32 +101,35 @@ def seed_customer():
         'name': 'Saitama',
         'address': 'Okinawa',
         'email': 'saitama@gmail.com',
-        'contactNumber': 123456
+        'contactNumber': 123456,
+        'password': 'password'
     }
     create_customer(data)
 
 
 def seed_manager():
     data = {
-        'name': 'Atomic Samurai',
+        'name': 'manager',
         'nric': 8888888,
         'contactNumber': 123456,
         'dateJoined': '2020-01-20 12:18:23 UTC',
         'startDate': '2020-01-22 12:18:23 UTC',
         'status': True,
-        'gender': 'Male'
+        'gender': 'Male',
+        'password': 'password',
     }
     create_manager(data)
 
 
 def seed_employee():
     data = {
-        'name': 'garo',
+        'name': 'employee',
         'nric': 9999999,
         'contactNumber': 123456,
         'dateJoined': '2020-01-20 12:18:23 UTC',
         'status': True,
-        'gender': 'Male'
+        'gender': 'Male',
+        'password': 'password'
     }
     create_employee(data)
 

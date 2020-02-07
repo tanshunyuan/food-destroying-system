@@ -11,17 +11,19 @@ session = db.session
 
 class Manager(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
+    name = db.Column(db.String, unique=True)
     nric = db.Column(db.Integer)
     contactNumber = db.Column(db.Integer)
     status = db.Column(db.Boolean)
     dateJoined = db.Column(db.DateTime)
     startDate = db.Column(db.DateTime)
     gender = db.Column(db.String)
+    password = db.Column(db.String)
 
 
 class ManagerSchema(ModelSchema):
-    model = Manager
+    class Meta:
+        model = Manager
 
 
 def create_manager(data):
@@ -31,11 +33,13 @@ def create_manager(data):
                           status=data['status'],
                           dateJoined=data['dateJoined'],
                           startDate=data['startDate'],
+                          password=data['password'],
                           gender=data['gender'])
     session.add(new_manager)
     logger.info('Attempting to create manager')
     try:
         session.commit()
+        logger.success('Successfully created {} manager', data['name'])
         didSucceed = True
     except Exception as e:
         print("Error ==> ", e)
@@ -44,3 +48,14 @@ def create_manager(data):
     finally:
         session.close()
         return didSucceed
+
+
+def get_manager(name):
+    logger.info('Attempting to get manager')
+    try:
+        result = session.query(Manager).filter_by(name=name).first()
+        return result
+    except Exception as e:
+        logger.error(e)
+        session.rollback()
+        raise
