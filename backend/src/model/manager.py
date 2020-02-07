@@ -27,6 +27,7 @@ class ManagerSchema(ModelSchema):
 
 
 def create_manager(data):
+    didSucceed = None
     new_manager = Manager(name=data['name'],
                           nric=data['nric'],
                           contactNumber=data['contactNumber'],
@@ -40,7 +41,7 @@ def create_manager(data):
     try:
         session.commit()
         logger.success('Successfully created {} manager', data['name'])
-        didSucceed = True
+        didSucceed = new_manager.id
     except Exception as e:
         print("Error ==> ", e)
         session.rollback()

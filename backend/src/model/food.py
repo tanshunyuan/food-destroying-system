@@ -59,9 +59,10 @@ def update_food_category(data):
         result = session.query(Food).filter_by(id=food_id).update(
             {Food.category_id: category_id})
         session.commit()
-        logger.success('Successfully updated {} to category {}', food.name,
-                       category_id)
-        return result
+        if food is not None:
+            logger.success('Successfully updated {} to category {}', food.name,
+                           category_id)
+            return result
     except Exception as e:
         logger.error(e)
         session.rollback()

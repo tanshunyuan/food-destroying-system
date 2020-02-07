@@ -71,7 +71,8 @@ def update_food_set_menu(data):
         for food_id in food_ids
     ]
     setmenu = session.query(SetMenu).filter_by(id=setmenu_id).first()
-    setmenu.setmenufood = food_id_array
+    if setmenu is not None:
+        setmenu.setmenufood = food_id_array
 
     try:
         session.commit()

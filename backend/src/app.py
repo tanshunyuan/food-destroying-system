@@ -126,6 +126,16 @@ def individual_food():
         return 'Employee not found', 404
 
 
+@app.route("/api/food/category", methods=['PUT'])
+def add_food_to_category():
+    data = request.get_json()
+    result = update_food_category(data)
+    if result is not None:
+        return jsonify(result, 200)
+    else:
+        return 'Something when wrong when adding your food to a category', 404
+
+
 @app.route("/api/category/new", methods=['POST'])
 def new_category():
     data = request.get_json()
