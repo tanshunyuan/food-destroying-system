@@ -34,7 +34,7 @@ def clear_data(session):
 def seed():
     session = db.session
     print('SEED: Seeding DB...')
-    clear_data(session)
+    #clear_data(session)
     seed_food_itemsWcategory()
     seed_customer()
     seed_manager()
