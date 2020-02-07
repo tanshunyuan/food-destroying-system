@@ -1,12 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from model.food import create_food
-from model.category import create_category, add_food_item
+from model.food import create_food, update_food_category
+from model.category import create_category
+from model.setmenu import create_set_menu, update_food_set_menu
 from model.customer import create_customer
 from model.manager import create_manager
 from model.dispatcher import create_dispatcher
 from model.employee import create_employee
 from loguru import logger
+
+
+def seed_food_itemsWcategory():
+    category_ids = seed_category()
+    food_ids = seed_food_items()
+    set_menu_ids = seed_set_menu()
+    i = 0
+    for category_id in category_ids:
+        update_food_category({'id': food_ids[i], 'category_id': category_id})
+        i = i + 1
+
+    for set_menu_id in set_menu_ids:
+        update_food_set_menu({'id': food_ids, 'setmenu_id': set_menu_id})
 
 
 def seed_food_items():
@@ -17,7 +31,6 @@ def seed_food_items():
             'price': 10,
             'description': 'This is a chicken burger',
             'unit': 100,
-            'category': 'Chicken'
         },
         {
             'name': 'Fish Burger',
@@ -25,7 +38,6 @@ def seed_food_items():
             'price': 10,
             'description': 'This is a fish burger',
             'unit': 100,
-            'category': 'Fish'
         },
         {
             'name': 'Tiramisu',
@@ -33,7 +45,6 @@ def seed_food_items():
             'price': 10,
             'description': 'This is a tiramisu',
             'unit': 100,
-            'category': 'Desert'
         },
         {
             'name': 'Pepsi',
@@ -41,20 +52,48 @@ def seed_food_items():
             'price': 10,
             'description': 'This is a pepsi',
             'unit': 100,
-            'category': 'Beverages'
         },
     ]
-
+    food_ids = []
     for row in data:
         food_id = create_food(row)
-        try:
-            if food_id is not None:
-                category_id = create_category({
-                    'name': row['category'],
-                    'foodItems': [food_id]
-                })
-        except Exception as e:
-            logger.error(e)
+        food_ids.append(food_id)
+    return food_ids
+
+
+def seed_category():
+    data = ['Chicken', 'Fish', 'Desert', 'Beverages']
+    category_ids = []
+    for name in data:
+        category_id = create_category({'name': name})
+        category_ids.append(category_id)
+    return category_ids
+
+
+def seed_set_menu():
+    data = [
+        {
+            'name': 'Breakfast',
+            'totalPrice': 100,
+            'size': 10
+        },
+        {
+            'name': 'Lunch',
+            'totalPrice': 100,
+            'size': 10
+        },
+        {
+            'name': 'Dinner',
+            'totalPrice': 100,
+            'size': 10
+        },
+    ]
+    set_menu_ids = []
+    for row in data:
+        set_menu_id = create_set_menu(row)
+        set_menu_ids.append(set_menu_id)
+
+    return set_menu_ids
 
 
 def seed_customer():

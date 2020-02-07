@@ -7,19 +7,19 @@ from loguru import logger
 
 from config import ConfigClass
 from common.common import db
-from common.seed import seed_food_items, seed_customer, seed_manager, seed_employee, seed_dispatcher
+from common.seed import seed_food_itemsWcategory, seed_customer, seed_manager, seed_employee, seed_dispatcher
 from model.customer import Customer, create_customer
 from model.manager import Manager, create_manager
 from model.employee import Employee, create_employee
-from model.food import Food
-from model.category import Category, add_food_item
+from model.food import Food, get_all_food, FoodSchema
+from model.category import Category
+from model.setmenu import SetMenu
 
 app = Flask(__name__)
 app.config.from_object(__name__ + '.ConfigClass')
-db.init_app(app)
 
+db.init_app(app)
 db.create_all(app=app)
-session = db.session
 
 
 def clear_data(session):
@@ -32,13 +32,10 @@ def clear_data(session):
 
 @app.cli.command("seed")
 def seed():
+    session = db.session
     print('SEED: Seeding DB...')
     clear_data(session)
-    seed_food_items()
-    seed_manager()
-    seed_customer()
-    seed_employee()
-    seed_dispatcher()
+    seed_food_itemsWcategory()
 
 
 @app.route("/signup", methods=['POST'])
@@ -62,8 +59,10 @@ def new_employee():
     return jsonify(result, 200)
 
 
-@app.route("/api/item/new", methods=['POST'])
-def addfooditem_under_category():
+@app.route("/api/food/all", methods=['GET'])
+def all_food():
     data = request.get_json()
-    result = add_food_item(data)
-    return jsonify(result, 200)
+    food_schemas = FoodSchema(many=True)
+    result = get_all_food()
+    logger.info(result)
+    return jsonify(food_schemas.dump(result), 200)

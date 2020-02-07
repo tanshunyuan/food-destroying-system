@@ -11,8 +11,8 @@ session = db.session
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    foodItems = db.Column(db.ARRAY(db.Integer))
     name = db.Column(db.String, unique=True)
+    foods = db.relationship('Food', backref='category', lazy=True)
 
 
 class CategorySchema(ModelSchema):
@@ -20,13 +20,13 @@ class CategorySchema(ModelSchema):
 
 
 def create_category(data):
-    didSucceed = False
-    new_category = Category(name=data['name'], foodItems=data['foodItems'])
+    didSucceed = None
+    new_category = Category(name=data['name'])
     logger.info('Attempting to create category')
     session.add(new_category)
     try:
         session.commit()
-        didSucceed = True
+        didSucceed = new_category.id
         logger.success('Successfully created {} category', data['name'])
     except Exception as e:
         logger.info('Failed to create {} category', data['name'])
@@ -38,27 +38,27 @@ def create_category(data):
         return didSucceed
 
 
-def add_food_item(data):
-    didSucceed = None
-    category_id = data['id']
-    category = session.query(Category).filter_by(id=category_id).first()
-
-    for item in data['foodItems']:
-        category.foodItems.append(item)
-
-    session.query(Category).filter_by(id=category_id).\
-        update({'foodItems':category.foodItems}, synchronize_session='evaluate')
-    logger.info('Attempting to add food items')
-    try:
-        session.commit()
-        didSucceed = True
-    except Exception as e:
-        logger.error(e)
-        session.rollback()
-        raise
-    finally:
-        session.close()
-        return didSucceed
+#def add_food_item(data):
+#    didSucceed = None
+#    category_id = data['id']
+#    category = session.query(Category).filter_by(id=category_id).first()
+#
+#    for item in data['foodItems']:
+#        category.foodItems.append(item)
+#
+#    session.query(Category).filter_by(id=category_id).\
+#        update({'foodItems':category.foodItems}, synchronize_session='evaluate')
+#    logger.info('Attempting to add food items')
+#    try:
+#        session.commit()
+#        didSucceed = True
+#    except Exception as e:
+#        logger.error(e)
+#        session.rollback()
+#        raise
+#    finally:
+#        session.close()
+#        return didSucceed
 
 
 def get_all_category():

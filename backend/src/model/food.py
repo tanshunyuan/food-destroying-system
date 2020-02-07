@@ -3,23 +3,28 @@
 
 from marshmallow_sqlalchemy import ModelSchema
 from loguru import logger
+from uuid import uuid4
+from sqlalchemy.dialects.postgresql import UUID
 
 from common.common import db
+from model.category import Category
 
 session = db.session
 
 
 class Food(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(UUID(as_uuid=True), default=uuid4, primary_key=True)
     name = db.Column(db.String, unique=True)
     status = db.Column(db.Boolean)
     price = db.Column(db.Integer)
     description = db.Column(db.String)
     unit = db.Column(db.Integer)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
 
 
 class FoodSchema(ModelSchema):
-    model = Food
+    class Meta:
+        model = Food
 
 
 def create_food(data):
@@ -43,6 +48,24 @@ def create_food(data):
     finally:
         session.close()
         return didSucceed
+
+
+def update_food_category(data):
+    logger.info('Attempting to update food category')
+    try:
+        food_id = data['id']
+        category_id = data['category_id']
+        food = session.query(Food).filter_by(id=food_id).first()
+        result = session.query(Food).filter_by(id=food_id).update(
+            {Food.category_id: category_id})
+        session.commit()
+        logger.success('Successfully updated {} to category {}', food.name,
+                       category_id)
+        return result
+    except Exception as e:
+        logger.error(e)
+        session.rollback()
+        raise
 
 
 def get_all_food():
