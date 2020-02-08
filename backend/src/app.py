@@ -12,12 +12,13 @@ from config import ConfigClass
 
 from common.common import db
 from common.seed import seed_food_itemsWcategory, seed_customer, seed_manager, seed_employee, seed_dispatcher
-from model.customer import Customer, create_customer, get_customer, CustomerSchema
-from model.manager import Manager, create_manager, get_manager, ManagerSchema
-from model.employee import Employee, create_employee, get_employee, EmployeeSchema
-from model.food import Food, get_all_food, get_food, create_food, update_food_category, FoodSchema
+from model.customer import Customer, CustomerSchema, create_customer, get_customer
+from model.manager import Manager, ManagerSchema, create_manager, get_manager
+from model.employee import Employee, EmployeeSchema, create_employee, get_employee
+from model.food import Food, FoodSchema, get_all_food, get_food, create_food, add_food_to_category
 from model.category import Category, CategorySchema, create_category, get_category, get_all_category
-from model.setmenu import SetMenu
+from model.setmenu import SetMenu, create_set_menu
+from model.setitem import SetItem, add_food_to_setitem
 load_dotenv()
 
 # Create database
@@ -30,7 +31,6 @@ app = Flask(__name__)
 app.config.from_object(__name__ + '.ConfigClass')
 
 db.init_app(app)
-
 # Create tables
 db.create_all(app=app)
 
@@ -47,7 +47,7 @@ def clear_data(session):
 def seed():
     session = db.session
     print('SEED: Seeding DB...')
-    #clear_data(session)
+    clear_data(session)
     seed_food_itemsWcategory()
     seed_customer()
     seed_manager()
@@ -140,9 +140,9 @@ def individual_food():
 
 
 @app.route("/api/food/category", methods=['PUT'])
-def add_food_to_category():
+def addFoodToCategory():
     data = request.get_json()
-    result = update_food_category(data)
+    result = add_food_to_category(data)
     if result is not None:
         return jsonify(result, 200)
     else:

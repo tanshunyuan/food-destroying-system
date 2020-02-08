@@ -50,8 +50,8 @@ def create_food(data):
         return didSucceed
 
 
-def update_food_category(data):
-    logger.info('Attempting to update food category')
+def add_food_to_category(data):
+    logger.info('Attempting to add food to a category')
     try:
         food_id = data['id']
         category_id = data['category_id']
@@ -60,7 +60,7 @@ def update_food_category(data):
             {Food.category_id: category_id})
         session.commit()
         if food is not None:
-            logger.success('Successfully updated {} to category {}', food.name,
+            logger.success('Successfully added {} to category {}', food.name,
                            category_id)
             return result
     except Exception as e:

@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from model.food import create_food, update_food_category
+from model.food import create_food, add_food_to_category
 from model.category import create_category
-from model.setmenu import create_set_menu, update_food_set_menu
+from model.setmenu import create_set_menu
+from model.setitem import create_set_item, add_food_to_setitem, add_setitem_to_setmenu
 from model.customer import create_customer
 from model.manager import create_manager
 from model.dispatcher import create_dispatcher
@@ -14,13 +15,19 @@ def seed_food_itemsWcategory():
     category_ids = seed_category()
     food_ids = seed_food_items()
     set_menu_ids = seed_set_menu()
-    i = 0
+    set_item_ids = seed_set_item()
+    x = 0
     for category_id in category_ids:
-        update_food_category({'id': food_ids[i], 'category_id': category_id})
-        i = i + 1
+        add_food_to_category({'id': food_ids[x], 'category_id': category_id})
+        x = x + 1
 
+    y = 0
     for set_menu_id in set_menu_ids:
-        update_food_set_menu({'id': food_ids, 'setmenu_id': set_menu_id})
+        add_setitem_to_setmenu({'setitem_id': set_item_ids[y], 'setmenu_id': set_menu_id})
+        y = y + 1
+
+    for set_item_id in set_item_ids:
+        add_food_to_setitem({'food_ids': food_ids, 'setitem_id': set_item_id})
 
 
 def seed_food_items():
@@ -94,6 +101,16 @@ def seed_set_menu():
         set_menu_ids.append(set_menu_id)
 
     return set_menu_ids
+
+
+def seed_set_item():
+    data = ['Platter One', 'Platter Two', 'Platter Three']
+    set_item_ids = []
+    for name in data:
+        set_item_id = create_set_item({'name': name})
+        set_item_ids.append(set_item_id)
+
+    return set_item_ids
 
 
 def seed_customer():
