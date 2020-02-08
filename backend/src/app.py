@@ -12,9 +12,7 @@ from config import ConfigClass
 
 from common.common import db
 from common.seed import seed_food_itemsWcategory, seed_customer, seed_manager, seed_employee, seed_dispatcher
-from model.customer import Customer, CustomerSchema, create_customer, get_customer
-from model.manager import Manager, ManagerSchema, create_manager, get_manager
-from model.employee import Employee, EmployeeSchema, create_employee, get_employee
+from model.user import authenticate_user
 from model.food import Food, FoodSchema, get_all_food, get_food, create_food, add_food_to_category
 from model.category import Category, CategorySchema, create_category, get_category, get_all_category
 from model.setmenu import SetMenu, SetMenuSchema, create_set_menu, get_all_setmenu
@@ -63,14 +61,9 @@ def signup():
 
 @app.route("/login", methods=['GET'])
 def login():
-    customer_schema = CustomerSchema()
     email = request.args.get('email')
-    result = get_customer(email)
-    if result is not None:
-        return jsonify(customer_schema.dump(result), 200)
-    else:
-        return 'Customer not found', 404
-
+    password = request.args.get('password')
+    return authenticate_user(email, password)
 
 @app.route("/api/manager/new", methods=['POST'])
 def new_manager():

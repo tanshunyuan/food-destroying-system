@@ -2,6 +2,7 @@ import os
 import bcrypt
 from loguru import logger
 from marshmallow_sqlalchemy import ModelSchema
+from flask import jsonify
 
 from common.common import db
 
@@ -17,9 +18,15 @@ class User(db.Model):
     role = db.Column(db.String)
     __mapper_args__ = {'polymorphic_identity': 'user', 'polymorphic_on': role}
 
+
 class UserSchema(ModelSchema):
     class Meta:
         model = User
+
+
+user_schema = UserSchema()
+user_schemas = UserSchema(many=True)
+
 
 def get_user(email):
     try:
@@ -43,16 +50,12 @@ def authenticate_user(email, password):
     is_password_correct = comparePassword(password, user['passHash'])
     if is_password_correct:
         logger.info('password_correct')
-        expires = timedelta(days=1)
-        token = create_access_token(identity=user['id'], expires_delta=expires)
         # Remove sensitive fields before response
         del user['passHash']
         del user['email']
         # Convert id from int to string
         user['id'] = str(user['id'])
-        return jsonify(token=token, user=user)
+        return jsonify(user=user)
     else:
         logger.error('password wrong')
         return 'Email and password combination is incorrect', 401
-
-
