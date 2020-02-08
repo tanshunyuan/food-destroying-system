@@ -32,6 +32,11 @@ class SetItem(db.Model):
                                   backref=db.backref('set_items', lazy=True))
 
 
+class SetItemSchema(ModelSchema):
+    class Meta:
+        model = SetItem
+
+
 def create_set_item(data):
     didSucceed = None
     new_set_item = SetItem(name=data['name'])
@@ -52,19 +57,47 @@ def create_set_item(data):
         return didSucceed
 
 
-def add_setitem_to_setmenu(data):
-    logger.info('Attempting to add setitem to a setmenu')
+def get_all_setitem():
+    logger.info('Attempting to get all setitem')
     try:
-        setitem_id = data['setitem_id']
-        setmenu_id = data['setmenu_id']
-        query = session.query(SetItem).filter_by(id=setitem_id)
-        setitem = query.first()
-        result = query.update({SetItem.setmenu_id: setmenu_id})
-        session.commit()
+        result = session.query(SetItem).all()
+        return result
     except Exception as e:
         logger.error(e)
         session.rollback()
         raise
+
+
+def get_setitem(id):
+    logger.info('Attempting to get setitem')
+    try:
+        result = session.query(SetItem).filter_by(id=id).first()
+        return result
+    except Exception as e:
+        logger.error(e)
+        session.rollback()
+        raise
+
+
+def add_setitem_to_setmenu(data):
+    logger.info('Attempting to add setitem to a setmenu')
+    setitem_id = data['setitem_id']
+    setmenu_id = data['setmenu_id']
+    didSucceed = None
+    try:
+        query = session.query(SetItem).filter_by(id=setitem_id)
+        setitem = query.first()
+        result = query.update({SetItem.setmenu_id: setmenu_id})
+        session.commit()
+        logger.success('Successfully added setitem to a setmenu')
+        didSucceed = True
+    except Exception as e:
+        session.rollback()
+        logger.error('Failed to add setitem to a setmenu')
+        didSucceed = False
+        raise
+    finally:
+        return didSucceed
 
 
 def add_food_to_setitem(data):
@@ -72,25 +105,20 @@ def add_food_to_setitem(data):
     logger.info('Attempting to update set item into a set menu')
     setitem_id = data['setitem_id']
     food_ids = data['food_ids']
-    logger.info('food ids {}', food_ids)
-
     food_array = [
         session.query(Food).filter_by(id=food_id).first()
         for food_id in food_ids
     ]
-
     setitem = session.query(SetItem).filter_by(id=setitem_id).first()
-
-    if setitem is not None:
-        setitem.setmenufood = food_array
-
     try:
         session.commit()
+        didSucceed = True
         for food in food_array:
             logger.success('Successfully added {} to set item {}', food.name,
                            setitem_id)
     except Exception as e:
-        logger.info('Failed to add food to setitem')
+        logger.error('Failed to add food to setitem')
+        didSucceed = False
         logger.error(e)
         session.rollback()
         raise

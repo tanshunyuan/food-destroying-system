@@ -127,6 +127,7 @@ def seed_customer():
 def seed_manager():
     data = {
         'name': 'manager',
+        'email': 'manager@gmail.com',
         'nric': 8888888,
         'contactNumber': 123456,
         'dateJoined': '2020-01-20 12:18:23 UTC',
@@ -141,6 +142,7 @@ def seed_manager():
 def seed_employee():
     data = {
         'name': 'employee',
+        'email': 'employee@gmail.com',
         'nric': 9999999,
         'contactNumber': 123456,
         'dateJoined': '2020-01-20 12:18:23 UTC',

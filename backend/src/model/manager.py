@@ -11,6 +11,7 @@ session = db.session
 
 class Manager(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String, unique=True)
     name = db.Column(db.String, unique=True)
     nric = db.Column(db.Integer)
     contactNumber = db.Column(db.Integer)
@@ -29,6 +30,7 @@ class ManagerSchema(ModelSchema):
 def create_manager(data):
     didSucceed = None
     new_manager = Manager(name=data['name'],
+                          email=data['email'], 
                           nric=data['nric'],
                           contactNumber=data['contactNumber'],
                           status=data['status'],
@@ -51,10 +53,10 @@ def create_manager(data):
         return didSucceed
 
 
-def get_manager(name):
+def get_manager(email):
     logger.info('Attempting to get manager')
     try:
-        result = session.query(Manager).filter_by(name=name).first()
+        result = session.query(Manager).filter_by(email=email).first()
         return result
     except Exception as e:
         logger.error(e)

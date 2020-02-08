@@ -12,6 +12,7 @@ session = db.session
 class Dispatcher(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True)
+    email = db.Column(db.String, unique=True)
     commission = db.Column(db.Float)
 
 
@@ -23,6 +24,7 @@ def create_dispatcher(data):
     didSucceed = None
     new_dispatcher = Dispatcher(
         name=data['name'],
+        email=data['email'],
         commission=data['commission'],
     )
     session.add(new_dispatcher)
@@ -39,3 +41,13 @@ def create_dispatcher(data):
     finally:
         session.close()
         return didSucceed
+
+def get_dispatcher(email):
+    logger.info('Attempting to get dispatcher')
+    try:
+        result = session.query(Dispatcher).filter_by(email=email).first()
+        return result
+    except Exception as e:
+        logger.error(e)
+        session.rollback()
+        raise

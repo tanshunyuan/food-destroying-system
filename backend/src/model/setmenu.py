@@ -9,14 +9,18 @@ from common.common import db
 
 session = db.session
 
+
 class SetMenu(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True)
     totalPrice = db.Column(db.Integer)
     size = db.Column(db.Integer)
 
+
 class SetMenuSchema(ModelSchema):
-    model = SetMenu
+    class Meta:
+        model = SetMenu
+
 
 def create_set_menu(data):
     didSucceed = None
@@ -40,3 +44,23 @@ def create_set_menu(data):
         return didSucceed
 
 
+def get_all_setmenu():
+    logger.info('Attempting to get all setmenu')
+    try:
+        result = session.query(SetMenu).all()
+        return result
+    except Exception as e:
+        logger.error(e)
+        session.rollback()
+        raise
+
+
+def get_setmenu(id):
+    logger.info('Attempting to get setmenu')
+    try:
+        result = session.query(SetMenu).filter_by(id=id).first()
+        return result
+    except Exception as e:
+        logger.error(e)
+        session.rollback()
+        raise

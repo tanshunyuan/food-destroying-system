@@ -17,8 +17,8 @@ from model.manager import Manager, ManagerSchema, create_manager, get_manager
 from model.employee import Employee, EmployeeSchema, create_employee, get_employee
 from model.food import Food, FoodSchema, get_all_food, get_food, create_food, add_food_to_category
 from model.category import Category, CategorySchema, create_category, get_category, get_all_category
-from model.setmenu import SetMenu, create_set_menu
-from model.setitem import SetItem, add_food_to_setitem
+from model.setmenu import SetMenu, SetMenuSchema, create_set_menu, get_all_setmenu
+from model.setitem import SetItem, SetItemSchema, create_set_item, add_food_to_setitem, get_all_setitem, add_setitem_to_setmenu
 load_dotenv()
 
 # Create database
@@ -82,8 +82,8 @@ def new_manager():
 @app.route("/api/manager", methods=['GET'])
 def manager_get():
     manager_schema = ManagerSchema()
-    name = request.args.get('name')
-    result = get_manager(name)
+    email = request.args.get('email')
+    result = get_manager(email)
     if result is not None:
         return jsonify(manager_schema.dump(result), 200)
     else:
@@ -100,8 +100,8 @@ def new_employee():
 @app.route("/api/employee", methods=['GET'])
 def employee_get():
     employee_schema = EmployeeSchema()
-    name = request.args.get('name')
-    result = get_employee(name)
+    email = request.args.get('email')
+    result = get_employee(email)
     if result is not None:
         return jsonify(employee_schema.dump(result), 200)
     else:
@@ -139,7 +139,7 @@ def individual_food():
         return 'Employee not found', 404
 
 
-@app.route("/api/food/category", methods=['PUT'])
+@app.route("/api/food/category", methods=['POST'])
 def addFoodToCategory():
     data = request.get_json()
     result = add_food_to_category(data)
@@ -178,3 +178,86 @@ def individual_category():
         return jsonify(category_schema.dump(result), 200)
     else:
         return 'Category not found', 404
+
+
+@app.route("/api/food/setitem", methods=['POST'])
+def addFoodToSetItem():
+    data = request.get_json()
+    result = add_food_to_setitem(data)
+    if result is not None:
+        return jsonify(result, 200)
+    else:
+        return 'Something when wrong when adding your food to a setitem', 404
+
+
+@app.route("/api/setitem/setmenu", methods=['POST'])
+def addSetItemToSetMenu():
+    data = request.get_json()
+    result = add_setitem_to_setmenu(data)
+    if result is True:
+        return jsonify(result, 200)
+    else:
+        return jsonify('Something when wrong when adding setitem to a setmenu',
+                       404)
+
+
+@app.route("/api/setmenu/new", methods=['POST'])
+def new_setmenu():
+    data = request.get_json()
+    result = create_set_menu(data)
+    if result is not None:
+        return jsonify(result, 200)
+    else:
+        return 'Something went wrong when creating setmenu', 404
+
+
+@app.route("/api/setmenu/all", methods=['GET'])
+def all_setmenu():
+    data = request.get_json()
+    setmenu_schemas = SetMenuSchema(many=True)
+    result = get_all_setmenu()
+    return jsonify(setmenu_schemas.dump(result), 200)
+
+
+@app.route("/api/setmenu", methods=['GET'])
+def retrieve_one_setmenu():
+    data = request.get_json()
+    setmenu_schema = SetMenuSchema()
+    id = request.args.get('id')
+    result = get_setmenu(id)
+    logger.info(result)
+    if result is not None:
+        return jsonify(setmenu_schema.dump(result), 200)
+    else:
+        return 'Set Menu not found', 404
+
+
+@app.route("/api/setitem/new", methods=['POST'])
+def new_set_item():
+    data = request.get_json()
+    result = create_set_item(data)
+    if result is not None:
+        return jsonify(result, 200)
+    else:
+        return 'Something went wrong when creating setitem', 404
+
+
+@app.route("/api/setitem/all", methods=['GET'])
+def all_setitem():
+    data = request.get_json()
+    setitem_schemas = SetItemSchema(many=True)
+    result = get_all_setitem()
+    return jsonify(setitem_schemas.dump(result), 200)
+
+
+@app.route("/api/setitem", methods=['GET'])
+def retrieve_one_setitem():
+    data = request.get_json()
+    setitem_schema = SetItemSchema()
+    id = request.args.get('id')
+    result = get_setitem(id)
+    logger.info(result)
+    if result is not None:
+        return jsonify(setitem_schema.dump(result), 200)
+    else:
+        return 'Set Item not found', 404
