@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
+from sqlalchemy_utils import database_exists, create_database
 from loguru import logger
-
+from dotenv import load_dotenv
 from config import ConfigClass
+
 from common.common import db
 from common.seed import seed_food_itemsWcategory, seed_customer, seed_manager, seed_employee, seed_dispatcher
 from model.customer import Customer, create_customer, get_customer, CustomerSchema
@@ -14,11 +18,20 @@ from model.employee import Employee, create_employee, get_employee, EmployeeSche
 from model.food import Food, get_all_food, get_food, create_food, update_food_category, FoodSchema
 from model.category import Category, CategorySchema, create_category, get_category, get_all_category
 from model.setmenu import SetMenu
+load_dotenv()
+
+# Create database
+engine = create_engine(os.getenv('DB_URL'))
+if not database_exists(engine.url):
+    logger.info('Creating DB')
+    create_database(engine.url)
 
 app = Flask(__name__)
 app.config.from_object(__name__ + '.ConfigClass')
 
 db.init_app(app)
+
+# Create tables
 db.create_all(app=app)
 
 

@@ -15,6 +15,7 @@ flask-migrate = "^2.5.2"
 loguru = "^0.4.1"
 bcrypt = "^3.1.7"
 python-dotenv = "^0.10.5"
+sqlalchemy-utils = "^0.36.1"
 
 [tool.poetry.dev-dependencies]
 
