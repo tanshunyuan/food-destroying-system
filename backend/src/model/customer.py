@@ -3,18 +3,18 @@
 from marshmallow_sqlalchemy import ModelSchema
 from loguru import logger
 
-from common.common import db
+from common.common import db, hashPassword
+from .user import User
 
 session = db.session
 
 
-class Customer(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
+class Customer(User):
+    id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
     address = db.Column(db.String)
-    email = db.Column(db.String, unique=True)
-    contactNumber = db.Column(db.Integer)
-    password = db.Column(db.String)
+    __mapper_args__ = {
+        'polymorphic_identity': 'customer',
+    }
 
 
 class CustomerSchema(ModelSchema):
@@ -24,10 +24,12 @@ class CustomerSchema(ModelSchema):
 
 def create_customer(data):
     didSucceed = None
+    passHash = hashPassword(data['password'])
     new_customer = Customer(name=data['name'],
                             address=data['address'],
                             email=data['email'],
-                            password=data['password'],
+                            passHash=passHash,
+                            role='customer',
                             contactNumber=data['contactNumber'])
     session.add(new_customer)
     logger.info('Attempting to create customer')
