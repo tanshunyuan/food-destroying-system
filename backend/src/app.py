@@ -7,7 +7,6 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy_utils import database_exists, create_database
 from loguru import logger
-from dotenv import load_dotenv
 from config import ConfigClass
 from sqlalchemy.dialects.postgresql import UUID
 
@@ -18,10 +17,11 @@ from model.food import Food, FoodSchema, get_all_food, get_food, create_food, ad
 from model.category import Category, CategorySchema, create_category, get_category, get_all_category
 from model.setmenu import SetMenu, SetMenuSchema, create_set_menu, get_all_setmenu
 from model.setitem import SetItem, SetItemSchema, create_set_item, add_food_to_setitem, get_all_setitem, add_setitem_to_setmenu
-load_dotenv()
 
 # Create database
-engine = create_engine(os.getenv('DB_URL'))
+engine = create_engine(
+    'postgresql://postgres:mysecretpassword@localhost:5432/fooddestroyingsystem'
+)
 if not database_exists(engine.url):
     logger.info('Creating DB')
     create_database(engine.url)
