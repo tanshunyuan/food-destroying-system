@@ -9,6 +9,8 @@ from sqlalchemy_utils import database_exists, create_database
 from loguru import logger
 from config import ConfigClass
 from sqlalchemy.dialects.postgresql import UUID
+from flask_cors import CORS
+
 
 from common.common import db
 from common.seed import seed_food_itemsWcategory, seed_customer, seed_manager, seed_employee, seed_dispatcher
@@ -30,6 +32,8 @@ app = Flask(__name__)
 app.config.from_object(__name__ + '.ConfigClass')
 
 db.init_app(app)
+
+CORS(app)
 # Create tables
 db.create_all(app=app)
 
