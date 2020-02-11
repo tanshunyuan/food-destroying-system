@@ -47,7 +47,7 @@ def create_manager(data):
         logger.success('Successfully created {} manager', data['name'])
         didSucceed = new_manager.id
     except Exception as e:
-        print("Error ==> ", e)
+        logger.error(e)
         session.rollback()
         raise
     finally:

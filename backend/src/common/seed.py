@@ -18,7 +18,7 @@ def seed_food_itemsWcategory():
     set_item_ids = seed_set_item()
     x = 0
     for category_id in category_ids:
-        add_food_to_category({'id': food_ids[x], 'category_id': category_id})
+        add_food_to_category({'food_id': food_ids[x], 'category_id': category_id})
         x = x + 1
 
     y = 0

@@ -46,7 +46,7 @@ def clear_data(session):
 def seed():
     session = db.session
     print('SEED: Seeding DB...')
-    clear_data(session)
+    #clear_data(session)
     seed_food_itemsWcategory()
     seed_customer()
     seed_manager()
@@ -57,7 +57,7 @@ def seed():
 def signup():
     data = request.get_json()
     result = create_customer(data)
-    return jsonify(result, 200)
+    return jsonify(result), 200
 
 
 @app.route("/login", methods=['GET'])
@@ -71,7 +71,7 @@ def login():
 def new_manager():
     data = request.get_json()
     result = create_manager(data)
-    return jsonify(result, 200)
+    return jsonify(result), 200
 
 
 @app.route("/api/manager", methods=['GET'])
@@ -80,7 +80,7 @@ def retrieve_manager():
     email = request.args.get('email')
     result = get_manager(email)
     if result is not None:
-        return jsonify(manager_schema.dump(result), 200)
+        return jsonify(manager_schema.dump(result)), 200
     else:
         return 'Manager not found', 404
 
@@ -89,7 +89,7 @@ def retrieve_manager():
 def new_employee():
     data = request.get_json()
     result = create_employee(data)
-    return jsonify(result, 200)
+    return jsonify(result), 200
 
 
 @app.route("/api/employee", methods=['GET'])
@@ -98,7 +98,7 @@ def retrieve_employee():
     email = request.args.get('email')
     result = get_employee(email)
     if result is not None:
-        return jsonify(employee_schema.dump(result), 200)
+        return jsonify(employee_schema.dump(result)), 200
     else:
         return 'Employee not found', 404
 
@@ -108,9 +108,9 @@ def new_food():
     data = request.get_json()
     result = create_food(data)
     if result is not None:
-        return jsonify(result, 200)
+        return jsonify(result), 200
     else:
-        return 'Something went wrong when creating ya food', 404
+        return 'Something went wrong when creating food', 404
 
 
 @app.route("/api/food/all", methods=['GET'])
@@ -118,7 +118,7 @@ def retrieve_foods():
     data = request.get_json()
     food_schemas = FoodSchema(many=True)
     result = get_all_food()
-    return jsonify(food_schemas.dump(result), 200)
+    return jsonify(result=food_schemas.dump(result)), 200
 
 
 @app.route("/api/food", methods=['GET'])
@@ -131,7 +131,7 @@ def retrieve_food():
     result = get_food(id)
     logger.info(result)
     if result is not None:
-        return jsonify(food_schema.dump(result), 200)
+        return jsonify(food_schema.dump(result)), 200
     else:
         return 'Food not found', 404
 
@@ -141,7 +141,7 @@ def assign_food_to_category():
     data = request.get_json()
     result = add_food_to_category(data)
     if result is not None:
-        return jsonify(result, 200)
+        return jsonify(result), 200
     else:
         return 'Something when wrong when adding your food to a category', 404
 
@@ -151,9 +151,9 @@ def new_category():
     data = request.get_json()
     result = create_category(data)
     if result is not None:
-        return jsonify(result, 200)
+        return jsonify(result), 200
     else:
-        return 'Something went wrong when creating ya category', 404
+        return 'Something went wrong when creating category', 404
 
 
 @app.route("/api/category/all", methods=['GET'])
@@ -161,7 +161,7 @@ def retrieve_categories():
     data = request.get_json()
     category_schemas = CategorySchema(many=True)
     result = get_all_category()
-    return jsonify(category_schemas.dump(result), 200)
+    return jsonify(result=category_schemas.dump(result)), 200
 
 
 @app.route("/api/category", methods=['GET'])
@@ -172,7 +172,7 @@ def retrieve_category():
     result = get_category(id)
     logger.info(result)
     if result is not None:
-        return jsonify(category_schema.dump(result), 200)
+        return jsonify(category_schema.dump(result)), 200
     else:
         return 'Category not found', 404
 
@@ -182,7 +182,7 @@ def assign_food_to_setitem():
     data = request.get_json()
     result = add_food_to_setitem(data)
     if result is not None:
-        return jsonify(result, 200)
+        return jsonify(result), 200
     else:
         return 'Something when wrong when adding your food to a setitem', 404
 
@@ -192,7 +192,7 @@ def assign_setitem_to_setmenu():
     data = request.get_json()
     result = add_setitem_to_setmenu(data)
     if result is True:
-        return jsonify(result, 200)
+        return jsonify(result), 200
     else:
         return jsonify('Something when wrong when adding setitem to a setmenu',
                        404)
@@ -203,7 +203,7 @@ def new_setmenu():
     data = request.get_json()
     result = create_set_menu(data)
     if result is not None:
-        return jsonify(result, 200)
+        return jsonify(setitem_id=result), 200
     else:
         return 'Something went wrong when creating setmenu', 404
 
@@ -213,7 +213,7 @@ def retrieve_setmenus():
     data = request.get_json()
     setmenu_schemas = SetMenuSchema(many=True)
     result = get_all_setmenu()
-    return jsonify(setmenu_schemas.dump(result), 200)
+    return jsonify(result=setmenu_schemas.dump(result)), 200
 
 
 @app.route("/api/setmenu", methods=['GET'])
@@ -224,7 +224,7 @@ def retrieve_setmenu():
     result = get_setmenu(id)
     logger.info(result)
     if result is not None:
-        return jsonify(setmenu_schema.dump(result), 200)
+        return jsonify(setmenu_schema.dump(result)), 200
     else:
         return 'Set Menu not found', 404
 
@@ -234,7 +234,8 @@ def new_set_item():
     data = request.get_json()
     result = create_set_item(data)
     if result is not None:
-        return jsonify(result, 200)
+        print(result)
+        return jsonify(set_item_id=result), 200
     else:
         return 'Something went wrong when creating setitem', 404
 
@@ -244,7 +245,7 @@ def retrieve_setitems():
     data = request.get_json()
     setitem_schemas = SetItemSchema(many=True)
     result = get_all_setitem()
-    return jsonify(setitem_schemas.dump(result), 200)
+    return jsonify(setitem_schemas.dump(result)), 200
 
 
 @app.route("/api/setitem", methods=['GET'])
@@ -255,6 +256,6 @@ def retrieve_setitem():
     result = get_setitem(id)
     logger.info(result)
     if result is not None:
-        return jsonify(setitem_schema.dump(result), 200)
+        return jsonify(setitem_schema.dump(result)), 200
     else:
         return 'Set Item not found', 404
