@@ -65,7 +65,8 @@ def login():
     password = request.args.get('password')
     return authenticate_user(email, password)
 
-@app.route("/api/manager/new", methods=['POST'])
+
+@app.route("/api/manager", methods=['POST'])
 def new_manager():
     data = request.get_json()
     result = create_manager(data)
@@ -83,7 +84,7 @@ def manager_get():
         return 'Manager not found', 404
 
 
-@app.route("/api/employee/new", methods=['POST'])
+@app.route("/api/employee", methods=['POST'])
 def new_employee():
     data = request.get_json()
     result = create_employee(data)
@@ -101,7 +102,7 @@ def employee_get():
         return 'Employee not found', 404
 
 
-@app.route("/api/food/new", methods=['POST'])
+@app.route("/api/food", methods=['POST'])
 def new_food():
     data = request.get_json()
     result = create_food(data)
@@ -142,7 +143,7 @@ def addFoodToCategory():
         return 'Something when wrong when adding your food to a category', 404
 
 
-@app.route("/api/category/new", methods=['POST'])
+@app.route("/api/category", methods=['POST'])
 def new_category():
     data = request.get_json()
     result = create_category(data)
@@ -194,7 +195,7 @@ def addSetItemToSetMenu():
                        404)
 
 
-@app.route("/api/setmenu/new", methods=['POST'])
+@app.route("/api/setmenu", methods=['POST'])
 def new_setmenu():
     data = request.get_json()
     result = create_set_menu(data)
@@ -225,7 +226,7 @@ def retrieve_one_setmenu():
         return 'Set Menu not found', 404
 
 
-@app.route("/api/setitem/new", methods=['POST'])
+@app.route("/api/setitem", methods=['POST'])
 def new_set_item():
     data = request.get_json()
     result = create_set_item(data)
