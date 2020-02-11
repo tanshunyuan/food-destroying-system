@@ -74,7 +74,7 @@ def new_manager():
 
 
 @app.route("/api/manager", methods=['GET'])
-def manager_get():
+def retrieve_manager():
     manager_schema = ManagerSchema()
     email = request.args.get('email')
     result = get_manager(email)
@@ -92,7 +92,7 @@ def new_employee():
 
 
 @app.route("/api/employee", methods=['GET'])
-def employee_get():
+def retrieve_employee():
     employee_schema = EmployeeSchema()
     email = request.args.get('email')
     result = get_employee(email)
@@ -113,7 +113,7 @@ def new_food():
 
 
 @app.route("/api/food/all", methods=['GET'])
-def all_food():
+def retrieve_foods():
     data = request.get_json()
     food_schemas = FoodSchema(many=True)
     result = get_all_food()
@@ -121,7 +121,7 @@ def all_food():
 
 
 @app.route("/api/food", methods=['GET'])
-def individual_food():
+def retrieve_food():
     data = request.get_json()
     food_schema = FoodSchema()
     id = request.args.get('id')
@@ -134,7 +134,7 @@ def individual_food():
 
 
 @app.route("/api/food/category", methods=['POST'])
-def addFoodToCategory():
+def assign_food_to_category():
     data = request.get_json()
     result = add_food_to_category(data)
     if result is not None:
@@ -154,7 +154,7 @@ def new_category():
 
 
 @app.route("/api/category/all", methods=['GET'])
-def all_category():
+def retrieve_categories():
     data = request.get_json()
     category_schemas = CategorySchema(many=True)
     result = get_all_category()
@@ -162,7 +162,7 @@ def all_category():
 
 
 @app.route("/api/category", methods=['GET'])
-def individual_category():
+def retrieve_category():
     data = request.get_json()
     category_schema = CategorySchema()
     id = request.args.get('id')
@@ -175,7 +175,7 @@ def individual_category():
 
 
 @app.route("/api/food/setitem", methods=['POST'])
-def addFoodToSetItem():
+def assign_food_to_setitem():
     data = request.get_json()
     result = add_food_to_setitem(data)
     if result is not None:
@@ -185,7 +185,7 @@ def addFoodToSetItem():
 
 
 @app.route("/api/setitem/setmenu", methods=['POST'])
-def addSetItemToSetMenu():
+def assign_setitem_to_setmenu():
     data = request.get_json()
     result = add_setitem_to_setmenu(data)
     if result is True:
@@ -206,7 +206,7 @@ def new_setmenu():
 
 
 @app.route("/api/setmenu/all", methods=['GET'])
-def all_setmenu():
+def retrieve_setmenus():
     data = request.get_json()
     setmenu_schemas = SetMenuSchema(many=True)
     result = get_all_setmenu()
@@ -214,7 +214,7 @@ def all_setmenu():
 
 
 @app.route("/api/setmenu", methods=['GET'])
-def retrieve_one_setmenu():
+def retrieve_setmenu():
     data = request.get_json()
     setmenu_schema = SetMenuSchema()
     id = request.args.get('id')
@@ -237,7 +237,7 @@ def new_set_item():
 
 
 @app.route("/api/setitem/all", methods=['GET'])
-def all_setitem():
+def retrieve_setitems():
     data = request.get_json()
     setitem_schemas = SetItemSchema(many=True)
     result = get_all_setitem()
@@ -245,7 +245,7 @@ def all_setitem():
 
 
 @app.route("/api/setitem", methods=['GET'])
-def retrieve_one_setitem():
+def retrieve_setitem():
     data = request.get_json()
     setitem_schema = SetItemSchema()
     id = request.args.get('id')
