@@ -9,6 +9,7 @@ from sqlalchemy_utils import database_exists, create_database
 from loguru import logger
 from dotenv import load_dotenv
 from config import ConfigClass
+from sqlalchemy.dialects.postgresql import UUID
 
 from common.common import db
 from common.seed import seed_food_itemsWcategory, seed_customer, seed_manager, seed_employee, seed_dispatcher
@@ -122,15 +123,17 @@ def retrieve_foods():
 
 @app.route("/api/food", methods=['GET'])
 def retrieve_food():
-    data = request.get_json()
     food_schema = FoodSchema()
-    id = request.args.get('id')
+    id = request.args.get('id', default='', type=str)
+    if id == "":
+        return 'Food not found', 404
+
     result = get_food(id)
     logger.info(result)
     if result is not None:
         return jsonify(food_schema.dump(result), 200)
     else:
-        return 'Employee not found', 404
+        return 'Food not found', 404
 
 
 @app.route("/api/food/category", methods=['POST'])
