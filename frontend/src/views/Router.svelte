@@ -5,9 +5,11 @@ import Navbar from '../components/Navbar';
 import Cart from './Cart';
 import CreateCategory from './CreateCategory';
 import CreateFoodItem from './CreateFoodItem';
+import CreateSetItem from './CreateSetItem';
 import CreateSetMenu from './CreateSetMenu';
 import Dashboard from './Dashboard';
 import Menu from './Menu';
+import SetMenu from './SetMenu'
 import ViewAllOrders from './ViewAllOrders';
 import ViewMyOrders from './ViewMyOrders';
 import ViewReceipt from './ViewReceipt';
@@ -26,8 +28,10 @@ let url = '/';
     <Route path="cart" component="{Cart}" />
     <Route path="createCategory" component="{CreateCategory}" />
     <Route path="createFoodItem" component="{CreateFoodItem}" />
+    <Route path="createSetItem" component="{CreateSetItem}" />
     <Route path="createSetMenu" component="{CreateSetMenu}" />
     <Route path="menu" component="{Menu}" />
+    <Route path="setMenu" component="{SetMenu}" />
     <Route path="orders" component="{ViewAllOrders}" />
     <Route path="myOrders" component={ViewMyOrders} />
     <Route path="viewReceipt" component="{ViewReceipt}" />

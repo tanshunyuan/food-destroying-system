@@ -28,7 +28,7 @@
 
 <nav>
    <Link to='/'>
-     <span id="logo"> FaceIT!</span>
+     <span id="logo"> Food Destroying System!</span>
    </Link>
    <small> Logged in as {$user.name} ({$user.role}) </small>
    <div id="controls"> 

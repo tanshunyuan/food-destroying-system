@@ -3,8 +3,7 @@ import { get } from 'svelte/store';
 
 const headers = () => ({
   'Accept': 'application/json',
-  'Content-Type': 'application/json',
-  'Authorization': `Bearer ${get(token)}`
+  'Content-Type': 'application/json'
 });
 
 const paths = {
@@ -21,12 +20,12 @@ const postRequest = (path, payload) => fetch(API_URL + path, {
   method: 'POST',
   body: JSON.stringify(payload)
 });
-const getRequest = (path) => fetch(API_URL + path, {
+const getRequest = (path) => fetch(process.env.API_URL + path, {
   method: 'GET'
 });
 
-export const postFood = (payload) => postRequest(paths.order, payload);
-//export const postFeatures = (payload) => postRequest(paths.features, payload);
+export const postFood = (payload) => postRequest(paths.food, payload);
+export const postCategory = (payload) => postRequest(paths.category, payload);
 
 export const getManagers = () => getRequest(paths.manager);
 export const getEmployees = () => getRequest(paths.employee);
@@ -35,5 +34,5 @@ export const getCategorys = () => getRequest(paths.category);
 //export const getAttendance = (eventID) => getRequest(`api/attendance?event=${eventID}`);
 
 // Public routes
-export const userLogin = (email, password) => fetch(API_URL + `login?email=${email}&password=${password}`);
+export const userLogin = (email, password) => fetch(process.env.API_URL + `login?email=${email}&password=${password}`);
 
