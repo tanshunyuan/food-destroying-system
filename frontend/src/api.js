@@ -15,11 +15,13 @@ const paths = {
   setitem: 'api/setitem'
 };
 
-const postRequest = (path, payload) => fetch(process.env.API_URL + path, {
+const API_URL = 'http://localhost:5000/'
+
+const postRequest = (path, payload) => fetch(API_URL + path, {
   method: 'POST',
   body: JSON.stringify(payload)
 });
-const getRequest = (path) => fetch(process.env.API_URL + path, {
+const getRequest = (path) => fetch(API_URL + path, {
   method: 'GET'
 });
 
@@ -33,5 +35,5 @@ export const getCategorys = () => getRequest(paths.category);
 //export const getAttendance = (eventID) => getRequest(`api/attendance?event=${eventID}`);
 
 // Public routes
-export const userLogin = (email, password) => fetch(process.env.API_URL + `login?email=${email}&password=${password}`);
+export const userLogin = (email, password) => fetch(API_URL + `login?email=${email}&password=${password}`);
 
