@@ -16,7 +16,7 @@ const paths = {
 
 const API_URL = 'http://localhost:5000/'
 
-const postRequest = (path, payload) => fetch(API_URL + path, {
+const postRequest = (path, payload) => fetch(process.env.API_URL  + path, {
   method: 'POST',
   body: JSON.stringify(payload)
 });
