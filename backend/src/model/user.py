@@ -55,7 +55,7 @@ def authenticate_user(email, password):
         del user['email']
         # Convert id from int to string
         user['id'] = str(user['id'])
-        return jsonify(user=user)
+        return jsonify(user=user), 200
     else:
         logger.error('password wrong')
         return 'Email and password combination is incorrect', 401

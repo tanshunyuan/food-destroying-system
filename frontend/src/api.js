@@ -8,33 +8,32 @@ const headers = () => ({
 });
 
 const paths = {
-  enrol: 'api/enrol',
-  features: 'api/features',
-  students: 'api/student',
-  courses: 'api/course',
-  years: 'api/year',
-  allEvents: 'api/event/all'
+  manager: 'api/manager',
+  employee: 'api/employee',
+  food: 'api/food',
+  category: 'api/category',
+  setitem: 'api/setitem'
 };
 
-const postRequest = (path, payload) => fetch(process.env.API_URL + path, {
+const API_URL = 'http://localhost:5000/'
+
+const postRequest = (path, payload) => fetch(API_URL + path, {
   method: 'POST',
-  headers: headers(),
   body: JSON.stringify(payload)
 });
-const getRequest = (path) => fetch(process.env.API_URL + path, {
-  method: 'GET',
-  headers: headers(),
+const getRequest = (path) => fetch(API_URL + path, {
+  method: 'GET'
 });
 
-export const postEnrol = (payload) => postRequest(paths.enrol, payload);
-export const postFeatures = (payload) => postRequest(paths.features, payload);
+export const postFood = (payload) => postRequest(paths.order, payload);
+//export const postFeatures = (payload) => postRequest(paths.features, payload);
 
-export const getStudents = () => getRequest(paths.students);
-export const getYears = () => getRequest(paths.years);
-export const getCourses = () => getRequest(paths.courses);
-export const getAllEvents = () => getRequest(paths.allEvents);
-export const getAttendance = (eventID) => getRequest(`api/attendance?event=${eventID}`);
+export const getManagers = () => getRequest(paths.manager);
+export const getEmployees = () => getRequest(paths.employee);
+export const getFoods = () => getRequest(paths.food);
+export const getCategorys = () => getRequest(paths.category);
+//export const getAttendance = (eventID) => getRequest(`api/attendance?event=${eventID}`);
 
 // Public routes
-export const userLogin = (email, password) => fetch(process.env.API_URL + `user/login?email=${email}&password=${password}`);
+export const userLogin = (email, password) => fetch(API_URL + `login?email=${email}&password=${password}`);
 

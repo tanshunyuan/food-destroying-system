@@ -84,20 +84,24 @@ def add_setitem_to_setmenu(data):
     setitem_id = data['setitem_id']
     setmenu_id = data['setmenu_id']
     didSucceed = None
-    try:
-        query = session.query(SetItem).filter_by(id=setitem_id)
-        setitem = query.first()
-        result = query.update({SetItem.setmenu_id: setmenu_id})
+
+    query = session.query(SetItem).filter_by(id=setitem_id)
+    setitem = query.first()
+    result = query.update({SetItem.setmenu_id: setmenu_id})
+
+    if result is not 0:
         session.commit()
-        logger.success('Successfully added setitem to a setmenu')
         didSucceed = True
-    except Exception as e:
+        logger.success('Successfully added setitem to a setmenu')
+    else:
         session.rollback()
         logger.error('Failed to add setitem to a setmenu')
         didSucceed = False
-        raise
-    finally:
-        return didSucceed
+
+    session.close()
+    return didSucceed
+
+        
 
 
 def add_food_to_setitem(data):
@@ -105,12 +109,14 @@ def add_food_to_setitem(data):
     logger.info('Attempting to update set item into a set menu')
     setitem_id = data['setitem_id']
     food_ids = data['food_ids']
-    food_array = [
-        session.query(Food).filter_by(id=food_id).first()
-        for food_id in food_ids
-    ]
-    setitem = session.query(SetItem).filter_by(id=setitem_id).first()
+
     try:
+        food_array = [
+            session.query(Food).filter_by(id=food_id).first()
+            for food_id in food_ids
+        ]
+        setitem = session.query(SetItem).filter_by(id=setitem_id).first()
+        setitem.setmenufood = food_array
         session.commit()
         didSucceed = True
         for food in food_array:
@@ -119,7 +125,6 @@ def add_food_to_setitem(data):
     except Exception as e:
         logger.error('Failed to add food to setitem')
         didSucceed = False
-        logger.error(e)
         session.rollback()
         raise
     finally:

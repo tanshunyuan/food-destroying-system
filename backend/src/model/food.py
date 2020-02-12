@@ -52,21 +52,25 @@ def create_food(data):
 
 def add_food_to_category(data):
     logger.info('Attempting to add food to a category')
-    try:
-        food_id = data['id']
-        category_id = data['category_id']
-        food = session.query(Food).filter_by(id=food_id).first()
-        result = session.query(Food).filter_by(id=food_id).update(
-            {Food.category_id: category_id})
+    food_id = data['food_id']
+    category_id = data['category_id']
+    didSucceed = None
+
+    query = session.query(Food).filter_by(id=food_id)
+    food = query.first()
+    result = query.update({Food.category_id: category_id})
+
+    if result is not 0:
         session.commit()
-        if food is not None:
-            logger.success('Successfully added {} to category {}', food.name,
-                           category_id)
-            return result
-    except Exception as e:
-        logger.error(e)
+        didSucceed = True
+        logger.success('Successfully added setitem to a setmenu')
+    else:
         session.rollback()
-        raise
+        logger.error('Failed to add setitem to a setmenu')
+        didSucceed = False
+
+    session.close()
+    return didSucceed
 
 
 def get_all_food():
