@@ -109,7 +109,7 @@ def new_food():
     data = request.get_json()
     result = create_food(data)
     if result is not None:
-        return jsonify(result), 200
+        return jsonify(food_id=result), 200
     else:
         return 'Something went wrong when creating food', 404
 
