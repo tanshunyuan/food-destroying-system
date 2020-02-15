@@ -7,10 +7,10 @@
   import { postFood } from "../api";
 
   let foodName = "",
-    description = "",
-    price = 0,
-    unit = 1,
-    status = true,
+    foodDescription = "",
+    foodPrice = 0,
+    foodUnit = 1,
+    foodStatus = true,
     errorMsg = "",
     n;
 
@@ -18,16 +18,16 @@
     //get location
     event.preventDefault();
     if (foodName != "") {
-      if (description != "") {
-        if (price > -1) {
-          if (unit > 0) {
-            let newFood = {
-              "name": foodName,
-              "status": status,
-              "price": price,
-              "description": description,
-              "unit": unit
+      if (foodDescription != "") {
+        if (foodPrice > -1) {
+          if (foodUnit > 0) {
+            let newFood = {name: foodName,
+              status: foodStatus,
+              price: foodPrice,
+              description: foodDescription,
+              unit: foodUnit
             }
+            console.log(JSON.stringify(newFood))
             postFood(newFood)
               .then(
                 response => {
@@ -99,23 +99,23 @@
       name="food description"
       type="text"
       placeholder="Description"
-      bind:value={description} />
+      bind:value={foodDescription} />
     <br />
     Price:
-    <input name="food price" type="number" bind:value={price} />
+    <input name="food price" type="number" bind:value={foodPrice} />
     <br />
     Unit:
-    <input name="units" type="number" bind:value={unit} />
+    <input name="units" type="number" bind:value={foodUnit} />
     <br />
     Status:
     <br />
     <label>
       Active
-      <input type="radio" bind:group={status} value={true} />
+      <input type="radio" bind:group={foodStatus} value={true} />
     </label>
     <label>
       Inactive
-      <input type="radio" bind:group={status} value={false} />
+      <input type="radio" bind:group={foodStatus} value={false} />
     </label>
     <p style="color: red;">{errorMsg}</p>
     <br />

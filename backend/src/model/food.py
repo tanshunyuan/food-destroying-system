@@ -29,6 +29,8 @@ class FoodSchema(ModelSchema):
 
 def create_food(data):
     didSucceed = None
+    logger.info(data)
+    logger.info('lol')
     new_food = Food(name=data['name'],
                     status=data['status'],
                     price=data['price'],

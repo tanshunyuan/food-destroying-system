@@ -109,7 +109,7 @@ def retrieve_employee():
 
 @app.route("/api/food", methods=['POST'])
 def new_food():
-    data = request.get_json()
+    data = request.get_json()   
     result = create_food(data)
     if result is not None:
         return jsonify(result), 200
