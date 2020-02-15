@@ -4,6 +4,7 @@ from model.food import create_food, add_food_to_category
 from model.category import create_category
 from model.setmenu import create_set_menu
 from model.setitem import create_set_item, add_food_to_setitem, add_setitem_to_setmenu
+from model.order import create_order
 from model.customer import create_customer
 from model.manager import create_manager
 from model.dispatcher import create_dispatcher
@@ -11,23 +12,49 @@ from model.employee import create_employee
 from loguru import logger
 
 
-def seed_food_itemsWcategory():
+def mainseed():
     category_ids = seed_category()
     food_ids = seed_food_items()
     set_menu_ids = seed_set_menu()
     set_item_ids = seed_set_item()
+    customer_id = seed_customer()
+    manager_id = seed_manager()
+    employee_id = seed_employee()
+    dispatcher_id = seed_dispatcher()
+    order_id = seed_order(customer_id, food_ids)
+
     x = 0
     for category_id in category_ids:
-        add_food_to_category({'food_id': food_ids[x], 'category_id': category_id})
+        add_food_to_category({
+            'food_id': food_ids[x],
+            'category_id': category_id
+        })
         x = x + 1
 
     y = 0
     for set_menu_id in set_menu_ids:
-        add_setitem_to_setmenu({'setitem_id': set_item_ids[y], 'setmenu_id': set_menu_id})
+        add_setitem_to_setmenu({
+            'setitem_id': set_item_ids[y],
+            'setmenu_id': set_menu_id
+        })
         y = y + 1
 
     for set_item_id in set_item_ids:
         add_food_to_setitem({'food_ids': food_ids, 'setitem_id': set_item_id})
+
+
+def seed_order(customer_id, food_ids):
+    data = {
+        'customer_id': customer_id,
+        'deliveryDateTime': '2020-01-20 12:18:23 UTC',
+        'readyDateTime': '2020-01-21 12:18:23 UTC',
+        'orderStatus': 'new',
+        'totalAmount': 100,
+        'food_ids': food_ids
+    }
+
+    order_id = create_order(data)
+    return order_id
 
 
 def seed_food_items():
@@ -121,7 +148,7 @@ def seed_customer():
         'contactNumber': 123456,
         'password': 'password'
     }
-    create_customer(data)
+    return create_customer(data)
 
 
 def seed_manager():
@@ -150,9 +177,13 @@ def seed_employee():
         'gender': 'Male',
         'password': 'password'
     }
-    create_employee(data)
+    return create_employee(data)
 
 
 def seed_dispatcher():
-    data = {'name': 'genos', 'commission': 100.33}
-    create_dispatcher(data)
+    data = {
+        'name': 'genos',
+        'commission': 100.33,
+        'email': 'dispatcher@gmail.com'
+    }
+    return create_dispatcher(data)
