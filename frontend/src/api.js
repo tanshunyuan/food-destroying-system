@@ -12,7 +12,8 @@ const paths = {
   employee: 'api/employee',
   food: 'api/food',
   category: 'api/category',
-  setitem: 'api/setitem'
+  setitem: 'api/setitem',
+  getOrders: 'api/order/all'
 };
 
 const API_URL = 'http://localhost:5000/'
@@ -32,7 +33,7 @@ export const getManagers = () => getRequest(paths.manager);
 export const getEmployees = () => getRequest(paths.employee);
 export const getFoods = () => getRequest(paths.food);
 export const getCategorys = () => getRequest(paths.category);
-//export const getAttendance = (eventID) => getRequest(`api/attendance?event=${eventID}`);
+export const getOrders = () => getRequest(paths.getOrders);
 
 // Public routes
 export const userLogin = (email, password) => fetch(API_URL + `login?email=${email}&password=${password}`);
