@@ -1,18 +1,18 @@
 <script>
   import { writable, get } from "svelte/store";
   import { onMount } from "svelte";
-  import { userMessage, user } from "./../stores.js";
+  import { userMessage, user, selectedFood } from "./../stores.js";
   import { Link, navigate } from "svelte-routing";
   import { NotificationDisplay, notifier } from "@beyonk/svelte-notifications";
   import { postFood, getCategorys, postFoodToCategory } from "../api";
   import Select from "svelte-select";
   import axios from "axios";
 
-  let foodName = "",
-    foodDescription = "",
-    foodPrice = 0,
-    foodUnit = 1,
-    foodStatus = true,
+  let foodName = get(selectedFood).name,
+    foodDescription = get(selectedFood).description,
+    foodPrice = get(selectedFood).price,
+    foodUnit = get(selectedFood).unit,
+    foodStatus = get(selectedFood).status,
     allCategories = [],
     errorMsg = "",
     selectedValue = undefined,
@@ -25,18 +25,19 @@
       .then(response => {
         allCategories = response.result;
         allCategories.forEach(element => {
-          console.log(element["id"].toString());
           length = items.length;
           items[length] = {
             value: element["id"],
             label: element["name"]
           };
+          if(get(selectedFood).category == element["id"]){
+              selectedValue ={value: element["id"], label: element["name"]}
+          }
         });
       });
   });
 
-  function createFood(event) {
-    //get location
+  function updateFood(event) {
     event.preventDefault();
     if (foodName != "") {
       if (foodDescription != "") {
@@ -44,7 +45,8 @@
           if (selectedValue != undefined) {
             if (foodUnit > 0) {
               axios
-                .post(`${process.env.API_URL}api/food`, {
+                .put(`${process.env.API_URL}api/food`, {
+                  id: get(selectedFood).id,
                   name: foodName,
                   status: foodStatus,
                   price: foodPrice,
@@ -53,11 +55,11 @@
                 })
                 .then(
                   response => {
-                    addCategory(response.data["food_id"])
+                    navigate("menu", { replace: true });
                   },
                   error => {
                     console.log(error);
-                    errorMsg = 'Food with the same name already exist';
+                    errorMsg = "Food with the same name already exist";
                   }
                 );
             } else {
@@ -77,23 +79,6 @@
     }
   }
 
-  function addCategory(foodid) {
-            var newAddition = {
-              "food_id": foodid,
-              "category_id": selectedValue.value
-            }
-
-            postFoodToCategory(newAddition).then(
-              response => {
-                console.log(response);
-                navigate("/", { replace: true });
-              },
-              error => {
-                console.log(error);
-                errorMsg = "Error adding food to category";
-              }
-            );
-  }
 </script>
 
 <style>
@@ -127,7 +112,7 @@
 
 <div class="content">
   <div class="form">
-    <h2>Create Food Item</h2>
+    <h2>Update Food Item</h2>
     Name:
     <br />
     <input
@@ -152,7 +137,7 @@
     Category:
     <br />
     <div class="Select">
-      <Select {items} bind:selectedValue />
+      <Select {items} bind:selectedValue isDisabled/>
     </div>
     <br />
     Status:
@@ -174,7 +159,7 @@
       class="formButton"
       type="submit"
       value="Submit"
-      on:click={createFood}>
+      on:click={updateFood}>
       Submit
     </button>
   </div>

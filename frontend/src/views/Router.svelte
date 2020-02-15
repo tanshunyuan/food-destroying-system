@@ -7,6 +7,7 @@ import CreateCategory from './CreateCategory';
 import CreateFoodItem from './CreateFoodItem';
 import CreateSetItem from './CreateSetItem';
 import CreateSetMenu from './CreateSetMenu';
+import UpdateFoodItem from './UpdateFood'
 import Dashboard from './Dashboard';
 import Menu from './Menu';
 import SetMenu from './SetMenu'
@@ -30,6 +31,7 @@ let url = '/';
     <Route path="createFoodItem" component="{CreateFoodItem}" />
     <Route path="createSetItem" component="{CreateSetItem}" />
     <Route path="createSetMenu" component="{CreateSetMenu}" />
+    <Route path="UpdateFoodItem" component="{UpdateFoodItem}" />
     <Route path="menu" component="{Menu}" />
     <Route path="setMenu" component="{SetMenu}" />
     <Route path="orders" component="{ViewAllOrders}" />

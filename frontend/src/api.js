@@ -12,27 +12,43 @@ const paths = {
   food: 'api/food',
   category: 'api/category',
   setitem: 'api/setitem',
-  getfood: '/api/food/all'
+  getfood: '/api/food/all',
+  getcategory: '/api/category/all',
+  addcategorytofood: '/api/food/category'
 };
 
 const API_URL = 'http://localhost:5000/'
 
 const postRequest = (path, payload) => fetch(process.env.API_URL  + path, {
   method: 'POST',
+  headers: headers(),
   body: JSON.stringify(payload)
 });
 const getRequest = (path) => fetch(process.env.API_URL + path, {
   method: 'GET'
 });
+const putRequest = (path, payload) => fetch(process.env.API_URL  + path, {
+  method: 'PUT',
+  headers: headers(),
+  body: JSON.stringify(payload)
+});
+const deleteRequest = (path, payload) => fetch(process.env.API_URL  + path, {
+  method: 'DELETE',
+  headers: headers(),
+  body: JSON.stringify(payload)
+});
 
 export const postFood = (payload) => postRequest(paths.food, payload);
 export const postCategory = (payload) => postRequest(paths.category, payload);
+export const postFoodToCategory = (payload) => postRequest(paths.addcategorytofood, payload);
 
 export const getManagers = () => getRequest(paths.manager);
 export const getEmployees = () => getRequest(paths.employee);
 export const getFoods = () => getRequest(paths.getfood);
-export const getCategorys = () => getRequest(paths.category);
-//export const getAttendance = (eventID) => getRequest(`api/attendance?event=${eventID}`);
+export const getCategorys = () => getRequest(paths.getcategory);
+
+export const updateFood = (payload) => putRequest(paths.food, payload);
+export const deleteFood = (payload) => deleteRequest(paths.food, payload);
 
 // Public routes
 export const userLogin = (email, password) => fetch(process.env.API_URL + `login?email=${email}&password=${password}`);
