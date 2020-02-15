@@ -14,7 +14,7 @@ from flask_cors import CORS
 from common.common import db
 from common.seed import mainseed
 from model.user import authenticate_user
-from model.food import Food, FoodSchema, get_all_food, get_food, create_food, add_food_to_category
+from model.food import Food, FoodSchema, get_all_food, get_food, create_food, add_food_to_category, update_food, delete_food
 from model.category import Category, CategorySchema, create_category, get_category, get_all_category
 from model.setmenu import SetMenu, SetMenuSchema, create_set_menu, get_all_setmenu
 from model.setitem import SetItem, SetItemSchema, create_set_item, add_food_to_setitem, get_all_setitem, add_setitem_to_setmenu
@@ -112,6 +112,26 @@ def new_food():
         return jsonify(food_id=result), 200
     else:
         return 'Something went wrong when creating food', 404
+
+
+@app.route("/api/food", methods=['PUT'])
+def update_a_food():
+    data = request.get_json()
+    result = update_food(data)
+    if result is not None:
+        return jsonify(result), 200
+    else:
+        return 'Something went wrong when updating food', 404
+
+
+@app.route("/api/food", methods=['DELETE'])
+def delete_a_food():
+    data = request.get_json()
+    result = delete_food(data)
+    if result is not None:
+        return jsonify(result), 200
+    else:
+        return 'Something went wrong when deleting food', 404
 
 
 @app.route("/api/food/all", methods=['GET'])

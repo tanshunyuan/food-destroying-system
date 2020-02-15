@@ -50,6 +50,50 @@ def create_food(data):
         return didSucceed
 
 
+def update_food(data):
+    logger.info('Attempting to update food')
+    didSucceed = None
+    food_id = data['id']
+    query = session.query(Food).filter_by(id=food_id)
+    result = query.update({
+        Food.id: food_id,
+        Food.name: data['name'],
+        Food.status: data['status'],
+        Food.price: data['price'],
+        Food.description: data['description'],
+        Food.unit: data['unit'],
+    })
+    if result is not 0:
+        session.commit()
+        didSucceed = True
+        logger.success('Successfully updated food')
+    else:
+        session.rollback()
+        logger.error('Failed to update food')
+        didSucceed = False
+
+    session.close()
+    return didSucceed
+
+
+def delete_food(data):
+    logger.info('Attempting to delete food')
+    didSucceed = None
+    food_id = data['id']
+    result = session.query(Food).filter_by(id=food_id).delete()
+    if result is not 0:
+        session.commit()
+        didSucceed = True
+        logger.success('Successfully deleted food')
+    else:
+        session.rollback()
+        logger.error('Failed to deleted food')
+        didSucceed = False
+
+    session.close()
+    return didSucceed
+
+
 def add_food_to_category(data):
     logger.info('Attempting to add food to a category')
     food_id = data['food_id']
@@ -57,16 +101,16 @@ def add_food_to_category(data):
     didSucceed = None
 
     query = session.query(Food).filter_by(id=food_id)
-    food = query.first()
+    #food = query.first()
     result = query.update({Food.category_id: category_id})
 
     if result is not 0:
         session.commit()
         didSucceed = True
-        logger.success('Successfully added setitem to a setmenu')
+        logger.success('Successfully added food to a category')
     else:
         session.rollback()
-        logger.error('Failed to add setitem to a setmenu')
+        logger.error('Failed to add food to a category')
         didSucceed = False
 
     session.close()
