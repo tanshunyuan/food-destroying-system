@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from sqlalchemy.dialects.postgresql import UUID
+from marshmallow_sqlalchemy.fields import Nested
 from marshmallow_sqlalchemy import ModelSchema
 from loguru import logger
 
 from common.common import db
-from model.food import Food
+from model.food import Food, FoodSchema
 
 session = db.session
 
@@ -33,6 +34,7 @@ class SetItem(db.Model):
 
 
 class SetItemSchema(ModelSchema):
+    setmenufood = Nested(FoodSchema, many=True)
     class Meta:
         model = SetItem
 

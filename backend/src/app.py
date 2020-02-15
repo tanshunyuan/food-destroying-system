@@ -11,14 +11,14 @@ from config import ConfigClass
 from sqlalchemy.dialects.postgresql import UUID
 from flask_cors import CORS
 
-
 from common.common import db
-from common.seed import seed_food_itemsWcategory, seed_customer, seed_manager, seed_employee, seed_dispatcher
+from common.seed import mainseed
 from model.user import authenticate_user
 from model.food import Food, FoodSchema, get_all_food, get_food, create_food, add_food_to_category
 from model.category import Category, CategorySchema, create_category, get_category, get_all_category
 from model.setmenu import SetMenu, SetMenuSchema, create_set_menu, get_all_setmenu
 from model.setitem import SetItem, SetItemSchema, create_set_item, add_food_to_setitem, get_all_setitem, add_setitem_to_setmenu
+from model.order import Order, OrderSchema, create_order, get_order, get_order_by_customer_id, get_all_order
 
 # Create database
 engine = create_engine(
@@ -50,11 +50,8 @@ def clear_data(session):
 def seed():
     session = db.session
     print('SEED: Seeding DB...')
-    #clear_data(session)
-    seed_food_itemsWcategory()
-    seed_customer()
-    seed_manager()
-    seed_employee()
+    clear_data(session)
+    mainseed()
 
 
 @app.route("/signup", methods=['POST'])
@@ -246,7 +243,6 @@ def new_set_item():
 
 @app.route("/api/setitem/all", methods=['GET'])
 def retrieve_setitems():
-    data = request.get_json()
     setitem_schemas = SetItemSchema(many=True)
     result = get_all_setitem()
     return jsonify(setitem_schemas.dump(result)), 200
@@ -254,7 +250,6 @@ def retrieve_setitems():
 
 @app.route("/api/setitem", methods=['GET'])
 def retrieve_setitem():
-    data = request.get_json()
     setitem_schema = SetItemSchema()
     id = request.args.get('id')
     result = get_setitem(id)
@@ -263,3 +258,29 @@ def retrieve_setitem():
         return jsonify(setitem_schema.dump(result)), 200
     else:
         return 'Set Item not found', 404
+
+
+@app.route("/api/order", methods=['POST'])
+def new_order():
+    data = request.get_json()
+    result = create_order(data)
+    if result is not None:
+        print(result)
+        return jsonify(order_id=result), 200
+    else:
+        return 'Something went wrong when creating order', 404
+
+
+@app.route("/api/order/all", methods=['GET'])
+def retrieve_orders():
+    order_schemas = OrderSchema(many=True)
+    result = get_all_order()
+    return jsonify(order_schemas.dump(result)), 200
+
+
+@app.route("/api/order/customer", methods=['GET'])
+def retrieve_order_by_customer():
+    customer_id = request.args.get('customer_id')
+    order_schema = OrderSchema()
+    result = get_order_by_customer_id(customer_id)
+    return jsonify(setitem_schemas.dump(result)), 200
