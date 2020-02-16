@@ -32,7 +32,9 @@
    </Link>
    <small> &nbsp &nbsp Logged in as {$user.name} ({$user.role}) </small>
    <div id="controls"> 
-    <Link to='/cart'>Cart</Link>
+    {#if $user.role === 'customer'}
+      <Link to='/cart'>Cart</Link>
+    {/if}
     <Link to='/' on:click={logOut}>Log out</Link>
    </div>
 </nav>

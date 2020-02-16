@@ -10,6 +10,7 @@
     import axios from "axios";
 
     let orders = [];
+    let statusFilter = '';
 
     // Get all orders
     onMount(() => {
@@ -113,6 +114,14 @@
 
     <!-- MANAGER -->
     {#if $user.role === 'manager'}
+        <select bind:value={statusFilter}>
+          <option value="new">New</option>
+          <option value="preparing">Preparing</option>
+          <option value="ready">Ready</option>
+          <option value="dispatched">Dispatched</option>
+          <option value="delivered">Delivered</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
         {#if orders.length != 0}
             <tr>
                 <th>Time Ordered</th>
