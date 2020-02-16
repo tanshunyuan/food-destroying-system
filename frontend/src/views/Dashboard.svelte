@@ -31,7 +31,7 @@
   {#if $user.role === 'employee'}
      <h1>Orders</h1>
     <Link to="orders">
-      <div class="button">View All Orders</div>
+      <div class="button">Prepare Order</div>
     </Link>
   {/if}
 
