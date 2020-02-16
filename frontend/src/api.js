@@ -12,6 +12,7 @@ const paths = {
   food: 'api/food',
   category: 'api/category',
   setitem: 'api/setitem',
+  postOrder: 'api/order',
   setmenu: 'api/setmenu',
   getfood: 'api/food/all',
   getcategory: 'api/category/all',
@@ -46,8 +47,9 @@ const deleteRequest = (path, payload) => fetch(process.env.API_URL  + path, {
 
 export const postFood = (payload) => postRequest(paths.food, payload);
 export const postCategory = (payload) => postRequest(paths.category, payload);
-export const postSetMenu = (payload) => postRequest(paths.setmenu, payload);
 export const postFoodToCategory = (payload) => postRequest(paths.addcategorytofood, payload);
+export const postOrder = (payload) => postRequest(paths.postOrder, payload);
+export const postSetMenu = (payload) => postRequest(paths.setmenu, payload);
 export const postSetitemToSetmenu= (payload) => postRequest(paths.addsetitemtosetmenu, payload);
 export const postFoodToSetitem= (payload) => postRequest(paths.addfoodtosetitem, payload);
 
@@ -55,6 +57,7 @@ export const getManagers = () => getRequest(paths.manager);
 export const getEmployees = () => getRequest(paths.employee);
 export const getFoods = () => getRequest(paths.getfood);
 export const getCategorys = () => getRequest(paths.getcategory);
+
 export const getSetItems = () => getRequest(paths.getsetitems);
 export const getSetMenus= () => getRequest(paths.getsetmenu);
 export const getOrders = () => getRequest(paths.getOrders);

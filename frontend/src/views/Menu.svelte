@@ -1,8 +1,8 @@
 <script>
-  import { getFoods, deleteFood, getSetMenus, getSetItems,getCategorys } from "../api";
+  import { getFoods, deleteFood, getSetMenus, getSetItems, getCategorys } from "../api";
   import { Link, navigate } from "svelte-routing";
   import { onMount } from "svelte";
-  import { user, selectedFood } from "./../stores.js";
+  import { user, selectedFood, cart } from "./../stores.js";
   import { get, set } from "svelte/store";
   import axios from "axios";
   import { Confirm } from "svelte-confirm";
@@ -77,14 +77,23 @@
       );
   }
 
+  function addToCart(food) {
+    cart.set([...$cart, food.id]);
+    console.info($cart);
+  }
+
+
   function searchSetMenu() {
     console.log(queryTextForSetmenu);
     if (queryTextForSetmenu === "") setMenuDisplayed = setMenu;
-    else
-      setMenuDisplayed = setMenu.filter(e =>
+    else {
+    setMenuDisplayed = setMenu.filter(e =>
         e.name.toUpperCase().includes(queryTextForSetmenu.toUpperCase())
       );
+    }
+      
   }
+
 </script>
 
 <style>
@@ -106,6 +115,7 @@
   }
 </style>
 
+<div class="content">
 <h1>Food Menu</h1>
 <div class="filter">
   <label for="name">Category Name:</label>
@@ -147,7 +157,7 @@
         <td>
           <div>
             {#if $user.role === 'customer'}
-              <button>
+              <button on:click={() => addToCart(food)}>
                 <img src="./../../public/cart.png" alt="Add to Cart" />
               </button>
             {/if}
@@ -269,4 +279,6 @@
   {/if}
 
 </table>
+
+</div>
 
