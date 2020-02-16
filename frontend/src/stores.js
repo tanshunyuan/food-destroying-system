@@ -49,4 +49,4 @@ const createUserStore = () => {
 export const token = createTokenStore();
 export const user = createUserStore();
 export const userMessage = writable('');
-export const selectedEvent = writable('');
+export const selectedFood = writable();

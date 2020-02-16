@@ -228,7 +228,7 @@ def new_setmenu():
     data = request.get_json()
     result = create_set_menu(data)
     if result is not None:
-        return jsonify(setitem_id=result), 200
+        return jsonify(setmenu_id=result), 200
     else:
         return 'Something went wrong when creating setmenu', 404
 
@@ -260,7 +260,7 @@ def new_set_item():
     result = create_set_item(data)
     if result is not None:
         print(result)
-        return jsonify(set_item_id=result), 200
+        return jsonify(setitem_id=result), 200
     else:
         return 'Something went wrong when creating setitem', 404
 
