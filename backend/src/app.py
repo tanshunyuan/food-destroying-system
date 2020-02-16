@@ -20,10 +20,14 @@ from model.setmenu import SetMenu, SetMenuSchema, create_set_menu, get_all_setme
 from model.setitem import SetItem, SetItemSchema, create_set_item, add_food_to_setitem, get_all_setitem, add_setitem_to_setmenu
 from model.order import Order, OrderSchema, create_order, get_order, get_order_by_customer_id, get_all_order
 
-# Create database
+#Create database
 engine = create_engine(
     'postgresql://postgres:mysecretpassword@localhost:5432/fooddestroyingsystem'
 )
+#  engine = create_engine(
+    #  'postgresql://postgres:mysecretpassword@se_postgresdb/fooddestroyingsystem'
+#  )
+
 if not database_exists(engine.url):
     logger.info('Creating DB')
     create_database(engine.url)
