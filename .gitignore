@@ -138,9 +138,9 @@ typings/
 
 # dotenv environment variables file
 
-.env
-
-.env.test
+# .env
+#
+# .env.test
 
 
 

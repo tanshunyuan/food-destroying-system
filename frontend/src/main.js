@@ -1,9 +1,7 @@
-import Root from './Root.svelte';
+import App from './Root.svelte';
 
-const app = new Root({
-	target: document.body,
+var app = new App({
+	target: document.body
 });
-
-window.app = app;
 
 export default app;
