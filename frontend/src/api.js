@@ -14,7 +14,8 @@ const paths = {
   setitem: 'api/setitem',
   getfood: 'api/food/all',
   getcategory: 'api/category/all',
-  addcategorytofood: 'api/food/category'
+  addcategorytofood: 'api/food/category',
+  postOrder: 'api/order' 
 };
 
 //const API_URL = 'http://localhost:5000/'
@@ -41,6 +42,7 @@ const deleteRequest = (path, payload) => fetch(process.env.API_URL  + path, {
 export const postFood = (payload) => postRequest(paths.food, payload);
 export const postCategory = (payload) => postRequest(paths.category, payload);
 export const postFoodToCategory = (payload) => postRequest(paths.addcategorytofood, payload);
+export const postOrder = (payload) => postRequest(paths.postOrder, payload);
 
 export const getManagers = () => getRequest(paths.manager);
 export const getEmployees = () => getRequest(paths.employee);

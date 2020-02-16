@@ -2,7 +2,7 @@
   import { getFoods, deleteFood } from "../api";
   import { Link, navigate } from "svelte-routing";
   import { onMount } from "svelte";
-  import { user, selectedFood } from "./../stores.js";
+  import { user, selectedFood, cart } from "./../stores.js";
   import { get, set } from "svelte/store";
   import axios from "axios";
   import { Confirm } from "svelte-confirm";
@@ -40,6 +40,11 @@
       .then(response => {
         navigate("/", { replace: true });
       });
+  }
+
+  function addToCart(food) {
+    cart.set([...$cart, food.id]);
+    console.info($cart);
   }
 </script>
 
@@ -87,8 +92,8 @@
         <td>
           <div>
             {#if $user.role === 'customer'}
-              <button>
-                <img src="./../../public/cart.png" alt="Add to Cart" />
+              <button on:click={() => addToCart(food)}>
+                + Add to Cart
               </button>
             {/if}
             {#if $user.role === 'manager'}
