@@ -79,17 +79,21 @@ def update_food(data):
 
 
 def delete_food(data):
-    logger.info('Attempting to delete food')
+    logger.info('Attempting to disable food')
     didSucceed = None
     food_id = data['id']
-    result = session.query(Food).filter_by(id=food_id).delete()
+    query = session.query(Food).filter_by(id=food_id)
+    result = query.update({
+        Food.id: food_id,
+        Food.status: data['status'],
+    })
     if result is not 0:
         session.commit()
         didSucceed = True
-        logger.success('Successfully deleted food')
+        logger.success('Successfully disabled food')
     else:
         session.rollback()
-        logger.error('Failed to deleted food')
+        logger.error('Failed to disable food')
         didSucceed = False
 
     session.close()
