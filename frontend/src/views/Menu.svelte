@@ -221,52 +221,48 @@
   {#if setMenuDisplayed != []}
     {#each setMenuDisplayed as setMenu}
       <tr>
-        <td colspan="5" class="tableData" style="text-align: center">
-          {setMenu.name}
-        </td>
-      </tr>
-      {#each setItemDisplayed as setItem}
-        {#if setItem.setmenu_id == setMenu.id}
-        <tr>
+        <td colspan="5" class="tableData" style="text-align: center">{setMenu.name}</td>
+        {#each setItemDisplayed as setItem}
+          {#if setItem.setmenu_id == setMenu.id}
           <td class="tableData">{setItem.name}</td>
-          <td class="tableData">{setItem.totalPrice}</td>
-          <td class="tableData">{setItem.size}</td>
-          <td>
-            <div>
-              {#if $user.role === 'customer'}
-                <button>
-                  <img src="./../../public/cart.png" alt="Add to Cart" />
-                </button>
-              {/if}
-              {#if $user.role === 'manager'}
-                <button>
-                  <img src="./../../public/edit.png" alt="Update" />
-                </button>
-                <Confirm
-                  confirmTitle="Delete"
-                  cancelTitle="Cancel"
-                  let:confirm={confirmThis}>
-                  <svg
-                    style="width:24px;height:24px"
-                    viewBox="0 0 24 24"
-                    class="delete-icon"
-                    }>
-                    <path
-                      fill="hsl(200, 40%, 20%)"
-                      d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0
-                      8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
-                  </svg>
-                  <span slot="title">Delete this item?</span>
-                  <span slot="description">
-                    You won't be able to revert this!
-                  </span>
-                </Confirm>
-              {/if}
-            </div>
-          </td>
-          </tr>
+        <td class="tableData">{setItem.totalPrice}</td>
+        <td class="tableData">{setItem.size}</td>
+         <td>
+          <div>
+            {#if $user.role === 'customer'}
+              <button>
+                <img src="./../../public/cart.png" alt="Add to Cart" />
+              </button>
+            {/if}
+            {#if $user.role === 'manager'}
+                  <button>
+                    <img src="./../../public/edit.png" alt="Update" />
+                  </button>
+                  <Confirm
+                    confirmTitle="Delete"
+                    cancelTitle="Cancel"
+                    let:confirm={confirmThis}>
+                    <svg
+                      style="width:24px;height:24px"
+                      viewBox="0 0 24 24"
+                      class="delete-icon"
+                     >
+                      <path
+                        fill="hsl(200, 40%, 20%)"
+                        d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0
+                        8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
+                    </svg>
+                    <span slot="title">Delete this item?</span>
+                    <span slot="description">
+                      You won't be able to revert this!
+                    </span>
+                  </Confirm>
+                {/if}
+          </div>
+        </td> 
         {/if}
-      {/each}
+        {/each}
+      </tr>
     {/each}
   {:else}
     <tr>
