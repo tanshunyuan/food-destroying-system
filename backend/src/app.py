@@ -23,10 +23,8 @@ from model.order import Order, OrderSchema, create_order, get_order, get_order_b
 #Create database
 engine = create_engine(
     'postgresql://postgres:mysecretpassword@localhost:5432/fooddestroyingsystem'
+    #'postgresql://postgres:mysecretpassword@se_postgresdb/fooddestroyingsystem'
 )
-#  engine = create_engine(
-#  'postgresql://postgres:mysecretpassword@se_postgresdb/fooddestroyingsystem'
-#  )
 
 if not database_exists(engine.url):
     logger.info('Creating DB')
@@ -228,7 +226,7 @@ def new_setmenu():
     data = request.get_json()
     result = create_set_menu(data)
     if result is not None:
-        return jsonify(setitem_id=result), 200
+        return jsonify(setmenu_id=result), 200
     else:
         return 'Something went wrong when creating setmenu', 404
 
@@ -260,7 +258,7 @@ def new_set_item():
     result = create_set_item(data)
     if result is not None:
         print(result)
-        return jsonify(set_item_id=result), 200
+        return jsonify(setitem_id=result), 200
     else:
         return 'Something went wrong when creating setitem', 404
 

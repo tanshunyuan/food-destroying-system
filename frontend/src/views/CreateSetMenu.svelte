@@ -4,7 +4,7 @@
   import { userMessage, user } from "./../stores.js";
   import { Link, navigate } from "svelte-routing";
   import { NotificationDisplay, notifier } from "@beyonk/svelte-notifications";
-  import { getFoods } from "../api";
+  import { getSetItems, postSetitemToSetmenu, postSetMenu} from "../api";
   import Select from "svelte-select";
   import axios from "axios";
 
@@ -12,17 +12,18 @@
     setTotalPrice = 0,
     setSize = 1,
     allFoods = [],
+    allSetItems= [],
     errorMsg = "",
     selectedValue = undefined,
     n,
     items = [];
 
   onMount(() => {
-    getFoods()
+    getSetItems()
       .then(r => r.json())
       .then(response => {
-        allFoods = response.result;
-        allFoods.forEach(element => {
+        allSetItems= response;
+        allSetItems.forEach(element => {
           console.log(element["id"].toString());
           length = items.length;
           items[length] = {
@@ -87,6 +88,28 @@
       }
     );
   }
+
+  function createSetMenu(event) {
+    event.preventDefault();
+    if (setName != "") {
+            let newSetmenu = {
+             "name": setName
+            };
+            postSetMenu(newSetmenu).then(
+              response => {
+                console.log(response);
+                navigate("/", { replace: true });
+              },
+              error => {
+                console.log(error);
+                errorMsg = "Error with creation";
+              }
+            );
+    } else {
+      errorMsg = "Add a Setmenu name";
+    }
+  }
+
 </script>
 
 <style>
@@ -150,7 +173,7 @@
       class="formButton"
       type="submit"
       value="Submit"
-      on:click={createFood}>
+      on:click={createSetMenu}>
       Submit
     </button>
   </div>
