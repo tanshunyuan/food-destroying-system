@@ -1,5 +1,5 @@
 // Using the State design pattern for an Order object
-// This file only manages their states
+// This file manages their states
 
 export class OrderState {
     constructor() {

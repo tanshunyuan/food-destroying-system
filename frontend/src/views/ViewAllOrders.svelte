@@ -5,7 +5,7 @@
 <script>
     import { OrderState } from "../components/OrderState.js";
     import { Order } from "../components/OrderState.js";
-    // import { state } from "../components/OrderState.js";
+    import { state } from "../components/OrderState.js";
     import { currentTime } from "../components/OrderState.js";
     import { user } from "./../stores.js";
     import { onMount } from "svelte";
@@ -25,6 +25,18 @@
     function convertToTime(time) {
         return time.slice(11, 19);
     }
+
+    // function chefAcceptsOrder() {
+    //     changeState(order, state)
+    //     .then(
+    //     response => {
+    //         console.log(response);
+    //     },
+    //     error => {
+    //         console.log(error);
+    //         errorMsg = "Error updating states!";
+    //     });
+    // }
 </script>
   
 <div class="content">
@@ -51,7 +63,7 @@
             <td>
             <div>
                 {#if $user.role === 'employee'}
-                    {#if order.current.order === 'new'}
+                    {#if state.current.order === 'new'}
                     <button on:click={state.change()}>Prepare Order 🔥</button>
                     {/if}
                     {#if state.current.order === 'preparing'}
@@ -65,7 +77,7 @@
     {:else}
         <tr>
         <td colspan="100%">
-            <h5 class="text-center">There are no pending orders!</h5>
+            <h5 class="text-center">There are no new orders at the moment.</h5>
         </td>
         </tr>
     {/if}
