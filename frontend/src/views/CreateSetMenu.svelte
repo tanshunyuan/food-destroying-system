@@ -4,25 +4,23 @@
   import { userMessage, user } from "./../stores.js";
   import { Link, navigate } from "svelte-routing";
   import { NotificationDisplay, notifier } from "@beyonk/svelte-notifications";
-  import { getFoods } from "../api";
+  import { getSetItems, postSetitemToSetmenu, postSetMenu} from "../api";
   import Select from "svelte-select";
   import axios from "axios";
 
   let setName = "",
-    setTotalPrice = 0,
-    setSize = 1,
-    allFoods = [],
+    allSetItems= [],
     errorMsg = "",
     selectedValue = undefined,
     n,
     items = [];
 
   onMount(() => {
-    getFoods()
+    getSetItems()
       .then(r => r.json())
       .then(response => {
-        allFoods = response.result;
-        allFoods.forEach(element => {
+        allSetItems= response;
+        allSetItems.forEach(element => {
           console.log(element["id"].toString());
           length = items.length;
           items[length] = {
@@ -33,60 +31,27 @@
       });
   });
 
-  function createFood(event) {
-    //get location
+  function createSetMenu(event) {
     event.preventDefault();
     if (setName != "") {
-      if (setTotalPrice > -1) {
-        if (selectedValue != undefined) {
-          if (setSize > 0) {
-            axios
-              .post(`${process.env.API_URL}api/setmenu`, {
-                name: setName,
-                totalPrice: setTotalPrice,
-                size: setSize,
-              })
-              .then(
-                response => {
-                  addFoodItems(response.data["setitem_id"]);
-                  //navigate("/", { replace: true });
-                },
-                error => {
-                  console.log(error);
-                  errorMsg = "set menu with the same name already exist";
-                }
-              );
-          } else {
-            errorMsg = "Size cannot be 0 or negative";
-          }
-        } else {
-          errorMsg = "Set has to contain food";
-        }
-      } else {
-        errorMsg = "Price cannot be negative";
-      }
+            let newSetmenu = {
+             "name": setName
+            };
+            postSetMenu(newSetmenu).then(
+              response => {
+                console.log(response);
+                navigate("/", { replace: true });
+              },
+              error => {
+                console.log(error);
+                errorMsg = "Error with creation";
+              }
+            );
     } else {
-      errorMsg = "Add a food name";
+      errorMsg = "Add a Setmenu name";
     }
   }
 
-  function addFoodItems(setid) {
-    var newAddition = {
-      food_id: foodid,
-      category_id: selectedValue.value
-    };
-
-    postFoodToCategory(newAddition).then(
-      response => {
-        console.log(response);
-        navigate("/", { replace: true });
-      },
-      error => {
-        console.log(error);
-        errorMsg = "Error adding food to category";
-      }
-    );
-  }
 </script>
 
 <style>
@@ -129,18 +94,6 @@
       placeholder="Set Name"
       bind:value={setName} />
     <br />
-    Price:
-    <input name="food price" type="number" bind:value={setTotalPrice} />
-    <br />
-    Size:
-    <input name="sizes" type="number" bind:value={setSize} />
-    <br />
-    Food:
-    <br />
-    <div class="Select">
-      <Select {items} isMulti={true} bind:selectedValue />
-    </div>
-    <br />
     <p style="color: red;">{errorMsg}</p>
     <br />
     <Link to="/">
@@ -150,7 +103,7 @@
       class="formButton"
       type="submit"
       value="Submit"
-      on:click={createFood}>
+      on:click={createSetMenu}>
       Submit
     </button>
   </div>
