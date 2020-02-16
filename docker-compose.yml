@@ -1,0 +1,37 @@
+version: '3'
+services:
+  se_postgresdb:
+    container_name: se_postgresdb
+    image: "postgres"
+    ports:
+      - "5432:5432"
+    restart: always
+    environment: 
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_USER: postgres
+      POSTGRES_DB: fooddestroyingsystem
+
+  se_api_service:
+    container_name: se_api_service
+    build: ./backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - se_postgresdb
+    links:
+      - se_postgresdb
+    command: ["sh", "start.sh"]
+    environment:
+      #DB_URL: 'postgresql://postgres:mysecretpassword@postgresdb/brian'
+      SECRET: ''
+
+  ui:
+    container_name: ui
+    build: ./frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - se_postgresdb
+    links:
+      - se_api_service
+    command: npm run dev 
