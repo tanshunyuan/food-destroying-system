@@ -300,7 +300,7 @@ def retrieve_orders():
     order_schemas = OrderSchema(many=True)
     result = get_all_order()
     return jsonify(order_schemas.dump(result)), 200
-
+    
 
 @app.route("/api/order/customer", methods=['GET'])
 def retrieve_order_by_customer():

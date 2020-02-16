@@ -19,7 +19,8 @@ const paths = {
   getsetmenu: 'api/setmenu/all',
   addcategorytofood: 'api/food/category',
   addsetitemtosetmenu: 'api/setitem/setmenu',
-  addfoodtosetitem: 'api/food/setitem'
+  addfoodtosetitem: 'api/food/setitem',
+  getOrders: 'api/order/all'
 };
 
 //const API_URL = 'http://localhost:5000/'
@@ -59,6 +60,8 @@ export const getSetMenus= () => getRequest(paths.getsetmenu);
 
 export const updateFood = (payload) => putRequest(paths.food, payload);
 export const deleteFood = (payload) => deleteRequest(paths.food, payload);
+
+export const updateOrderStatus = (payload) => putRequest(paths.order, payload);
 
 // Public routes
 export const userLogin = (email, password) => fetch(process.env.API_URL + `login?email=${email}&password=${password}`);
