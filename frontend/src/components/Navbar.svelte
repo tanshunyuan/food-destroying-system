@@ -17,7 +17,7 @@
 <script>
 
   import { token, user } from '../stores';
-  import { navigate,Link } from 'svelte-routing';
+  import { navigate, Link } from 'svelte-routing';
 
   function logOut() {
     token.unset();
@@ -32,6 +32,7 @@
    </Link>
    <small> &nbsp &nbsp Logged in as {$user.name} ({$user.role}) </small>
    <div id="controls"> 
+    <Link to='/cart'>Cart</Link>
     <Link to='/' on:click={logOut}>Log out</Link>
    </div>
 </nav>

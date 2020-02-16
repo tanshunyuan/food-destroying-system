@@ -50,3 +50,4 @@ export const token = createTokenStore();
 export const user = createUserStore();
 export const userMessage = writable('');
 export const selectedFood = writable();
+export const cart  = writable([]);

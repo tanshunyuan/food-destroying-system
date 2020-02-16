@@ -1,8 +1,8 @@
 <script>
-  import { getFoods, deleteFood,getSetMenus,getSetItems } from "../api";
+  import { getFoods, deleteFood, getSetMenus, getSetItems } from "../api";
   import { Link, navigate } from "svelte-routing";
   import { onMount } from "svelte";
-  import { user, selectedFood } from "./../stores.js";
+  import { user, selectedFood, cart } from "./../stores.js";
   import { get, set } from "svelte/store";
   import axios from "axios";
   import { Confirm } from "svelte-confirm";
@@ -14,7 +14,7 @@
   let setItemDisplayed = [];
   let id = 0;
   let dialogOpen = false;
-   let queryTextForSetmenu = "";
+ let queryTextForSetmenu = "";
 
   let queryTextForFood = "";
   onMount(() => {
@@ -59,6 +59,10 @@
       });
   }
 
+  function addToCart(food) {
+    cart.set([...$cart, food.id]);
+    console.info($cart);
+
   function searchFood() {
     console.log(queryTextForFood);
 
@@ -68,6 +72,7 @@
         e.name.toUpperCase().includes(queryTextForFood.toUpperCase())
       );
   }
+
   function searchSetMenu() {
     console.log(queryTextForSetmenu);
     if (queryTextForSetmenu === "") setMenuDisplayed = setMenu;
@@ -132,7 +137,7 @@
         <td>
           <div>
             {#if $user.role === 'customer'}
-              <button>
+              <button on:click={() => addToCart(food)}>
                 <img src="./../../public/cart.png" alt="Add to Cart" />
               </button>
             {/if}

@@ -9,6 +9,9 @@
   import axios from "axios";
 
   let setName = "",
+    setTotalPrice = 0,
+    setSize = 1,
+    allFoods = [],
     allSetItems= [],
     errorMsg = "",
     selectedValue = undefined,
@@ -30,6 +33,61 @@
         });
       });
   });
+
+  function createFood(event) {
+    //get location
+    event.preventDefault();
+    if (setName != "") {
+      if (setTotalPrice > -1) {
+        if (selectedValue != undefined) {
+          if (setSize > 0) {
+            axios
+              .post(`${process.env.API_URL}api/setmenu`, {
+                name: setName,
+                totalPrice: setTotalPrice,
+                size: setSize,
+              })
+              .then(
+                response => {
+                  addFoodItems(response.data["setitem_id"]);
+                  //navigate("/", { replace: true });
+                },
+                error => {
+                  console.log(error);
+                  errorMsg = "set menu with the same name already exist";
+                }
+              );
+          } else {
+            errorMsg = "Size cannot be 0 or negative";
+          }
+        } else {
+          errorMsg = "Set has to contain food";
+        }
+      } else {
+        errorMsg = "Price cannot be negative";
+      }
+    } else {
+      errorMsg = "Add a food name";
+    }
+  }
+
+  function addFoodItems(setid) {
+    var newAddition = {
+      food_id: foodid,
+      category_id: selectedValue.value
+    };
+
+    postFoodToCategory(newAddition).then(
+      response => {
+        console.log(response);
+        navigate("/", { replace: true });
+      },
+      error => {
+        console.log(error);
+        errorMsg = "Error adding food to category";
+      }
+    );
+  }
 
   function createSetMenu(event) {
     event.preventDefault();
@@ -93,6 +151,18 @@
       type="text"
       placeholder="Set Name"
       bind:value={setName} />
+    <br />
+    Price:
+    <input name="food price" type="number" bind:value={setTotalPrice} />
+    <br />
+    Size:
+    <input name="sizes" type="number" bind:value={setSize} />
+    <br />
+    Food:
+    <br />
+    <div class="Select">
+      <Select {items} isMulti={true} bind:selectedValue />
+    </div>
     <br />
     <p style="color: red;">{errorMsg}</p>
     <br />
