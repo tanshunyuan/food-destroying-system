@@ -13,7 +13,7 @@
 
     // Get all orders
     onMount(() => {
-        // DEBUG MODE: CHANGE STATE OF ORDER TO NEW
+        // DEBUG ONLY: CHANGE STATE OF ORDER TO NEW
         // axios
         // .put(`${process.env.API_URL}api/order`, {
         //     id: '1',
@@ -67,16 +67,25 @@
     <tr>
         <th>Time Ordered</th>
         <th>Ordered Items</th>
+        <th>Status</th>
         <th>Actions</th>
     </tr>
         {#each getDisplayedOrders(orders) as order}
         <tr>
+            <!-- Time -->
             <td class="tableData">{convertToTime(order.createdDateTime)}</td>
+            
+            <!-- Ordered Items -->
             <td class="tableData">
             {#each order.orderedItems as item}
                 {item.name}<br>
             {/each}
             </td>
+
+            <!-- Status -->
+            <td>{order.orderStatus}</td>
+
+            <!-- Actions -->
             <td>
             <div>
                 {#if $user.role === 'employee'}
@@ -122,5 +131,8 @@ th {
 }
 h5 {
     text-align: center;
+}
+td:first-letter {
+    text-transform:capitalize;
 }
 </style>

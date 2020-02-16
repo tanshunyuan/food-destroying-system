@@ -28,7 +28,7 @@
 
 <nav>
    <Link to='/'>
-     <span id="logo"> FaceIT!</span>
+     <span id="logo">Food Ordering System!</span>
    </Link>
    <small> &nbsp &nbsp Logged in as {$user.name} ({$user.role}) </small>
    <div id="controls"> 
