@@ -87,6 +87,26 @@ def get_all_order():
         session.rollback()
         raise
 
+def update_order_status(data):
+    logger.info('Attempting to update order status')
+    didSucceed = None
+    order_id = data['id']
+    query = session.query(Order).filter_by(id=order_id)
+    result = query.update({
+        Order.id: order_id,
+        Order.orderStatus: data['orderStatus'],
+    })
+    if result is not 0:
+        session.commit()
+        didSucceed = True
+        logger.success('Successfully updated order status')
+    else:
+        session.rollback()
+        logger.error('Failed to update order status')
+        didSucceed = False
+
+    session.close()
+    return didSucceed
 
 def get_order(id):
     logger.info('Attempting to get order')
