@@ -12,12 +12,12 @@ const paths = {
   food: 'api/food',
   category: 'api/category',
   setitem: 'api/setitem',
-  getfood: '/api/food/all',
-  getcategory: '/api/category/all',
-  addcategorytofood: '/api/food/category'
+  getfood: 'api/food/all',
+  getcategory: 'api/category/all',
+  addcategorytofood: 'api/food/category'
 };
 
-const API_URL = 'http://localhost:5000/'
+//const API_URL = 'http://localhost:5000/'
 
 const postRequest = (path, payload) => fetch(process.env.API_URL  + path, {
   method: 'POST',
