@@ -40,6 +40,7 @@ class SetItemSchema(ModelSchema):
 
     class Meta:
         model = SetItem
+        include_fk=True
 
 
 def create_set_item(data):
