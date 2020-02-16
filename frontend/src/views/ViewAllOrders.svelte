@@ -63,32 +63,34 @@
     <br>
     <table id="eventTable">
 
-    {#if getDisplayedOrders(orders).length != 0}
-    <tr>
-        <th>Time Ordered</th>
-        <th>Ordered Items</th>
-        <th>Status</th>
-        <th>Actions</th>
-    </tr>
-        {#each getDisplayedOrders(orders) as order}
-        <tr>
-            <!-- Time -->
-            <td class="tableData">{convertToTime(order.createdDateTime)}</td>
-            
-            <!-- Ordered Items -->
-            <td class="tableData">
-            {#each order.orderedItems as item}
-                {item.name}<br>
-            {/each}
-            </td>
+    <!-- CHEF -->
+    {#if $user.role === 'employee'}
+        {#if getDisplayedOrders(orders).length != 0}
+            <tr>
+                <th>Time Ordered</th>
+                <th>Ordered Items</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
 
-            <!-- Status -->
-            <td>{order.orderStatus}</td>
+            {#each getDisplayedOrders(orders) as order}
+            <tr>
+                <!-- Time -->
+                <td class="tableData">{convertToTime(order.createdDateTime)}</td>
+                
+                <!-- Ordered Items -->
+                <td class="tableData">
+                {#each order.orderedItems as item}
+                    {item.name}<br>
+                {/each}
+                </td>
 
-            <!-- Actions -->
-            <td>
-            <div>
-                {#if $user.role === 'employee'}
+                <!-- Status -->
+                <td>{order.orderStatus}</td>
+
+                <!-- Actions -->
+                <td>
+                <div>
                     {#if order.orderStatus === 'new'}
                     <button on:click={getCurrentState(order).current.chefAcceptsOrder(order, getCurrentState(order))}>Prepare Order 🔥</button>
                     {/if}
@@ -96,18 +98,51 @@
                     {#if order.orderStatus === 'preparing'}
                     <button on:click={getCurrentState(order).current.chefUpdateOrder(order, getCurrentState(order))}>Ready 👍</button>
                     {/if}
-                {/if}
-            </div>
-            </td>
-        </tr>
-        {/each}
-    
-    {:else}
+                </div>
+                </td>
+            </tr>
+            {/each}
+        {:else}
         <tr>
         <td colspan="100%">
             <h5>There are no new orders at the moment.</h5>
         </td>
         </tr>
+        {/if}
+    {/if}
+
+    <!-- MANAGER -->
+    {#if $user.role === 'manager'}
+        {#if orders.length != 0}
+            <tr>
+                <th>Time Ordered</th>
+                <th>Ordered Items</th>
+                <th>Status</th>
+            </tr>
+
+            {#each orders as order}
+            <tr>
+                <!-- Time -->
+                <td class="tableData">{convertToTime(order.createdDateTime)}</td>
+                
+                <!-- Ordered Items -->
+                <td class="tableData">
+                {#each order.orderedItems as item}
+                    {item.name}<br>
+                {/each}
+                </td>
+
+                <!-- Status -->
+                <td>{order.orderStatus}</td>
+            </tr>
+            {/each}
+        {:else}
+        <tr>
+        <td colspan="100%">
+            <h5>There are no new orders at the moment.</h5>
+        </td>
+        </tr>
+        {/if}
     {/if}
 
     </table>
