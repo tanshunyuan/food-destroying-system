@@ -13,8 +13,6 @@ session = db.session
 class SetMenu(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True)
-    totalPrice = db.Column(db.Integer)
-    size = db.Column(db.Integer)
 
 
 class SetMenuSchema(ModelSchema):
@@ -24,18 +22,16 @@ class SetMenuSchema(ModelSchema):
 
 def create_set_menu(data):
     didSucceed = None
-    new_set_menu = SetMenu(name=data['name'],
-                           totalPrice=data['totalPrice'],
-                           size=data['size'])
+    new_set_menu = SetMenu(name=data['name'])
     session.add(new_set_menu)
     logger.info('Attempting to create set menu')
 
     try:
         session.commit()
         didSucceed = new_set_menu.id
-        logger.success('Successfully created {}', data['name'])
+        logger.success('Successfully created set menu')
     except Exception as e:
-        logger.info('Failed to create {}', data['name'])
+        logger.info('Failed to create set item')
         logger.error(e)
         session.rollback()
         raise

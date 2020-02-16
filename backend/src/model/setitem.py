@@ -26,6 +26,8 @@ foodsetitem = db.Table(
 class SetItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True)
+    totalPrice = db.Column(db.Integer)
+    size = db.Column(db.Integer)
     setmenu_id = db.Column(db.Integer, db.ForeignKey('set_menu.id'))
     setmenufood = db.relationship('Food',
                                   secondary=foodsetitem,
@@ -35,22 +37,25 @@ class SetItem(db.Model):
 
 class SetItemSchema(ModelSchema):
     setmenufood = Nested(FoodSchema, many=True)
+
     class Meta:
         model = SetItem
 
 
 def create_set_item(data):
     didSucceed = None
-    new_set_item = SetItem(name=data['name'])
+    new_set_item = SetItem(name=data['name'],
+                           totalPrice=data['totalPrice'],
+                           size=data['size'])
     session.add(new_set_item)
     logger.info('Attempting to create set item')
 
     try:
         session.commit()
         didSucceed = new_set_item.id
-        logger.success('Successfully created {}', data['name'])
+        logger.success('Successfully created set item')
     except Exception as e:
-        logger.info('Failed to create {}', data['name'])
+        logger.info('Failed to create set item')
         logger.error(e)
         session.rollback()
         raise
@@ -102,8 +107,6 @@ def add_setitem_to_setmenu(data):
 
     session.close()
     return didSucceed
-
-        
 
 
 def add_food_to_setitem(data):
