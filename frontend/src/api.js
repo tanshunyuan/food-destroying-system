@@ -57,11 +57,12 @@ export const getFoods = () => getRequest(paths.getfood);
 export const getCategorys = () => getRequest(paths.getcategory);
 export const getSetItems = () => getRequest(paths.getsetitems);
 export const getSetMenus= () => getRequest(paths.getsetmenu);
+export const getOrders = () => getRequest(paths.getOrders);
 
 export const updateFood = (payload) => putRequest(paths.food, payload);
-export const deleteFood = (payload) => deleteRequest(paths.food, payload);
-
 export const updateOrderStatus = (payload) => putRequest(paths.order, payload);
+
+export const deleteFood = (payload) => deleteRequest(paths.food, payload);
 
 // Public routes
 export const userLogin = (email, password) => fetch(process.env.API_URL + `login?email=${email}&password=${password}`);
