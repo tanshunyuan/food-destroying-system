@@ -216,9 +216,7 @@
     <th>Set Name</th>
     <th>price</th>
     <th>size</th>
-    {#if $user.role === 'customer'}
-      <th>action</th>
-    {/if}
+    <th>action</th>
   </tr>
   {#if setMenuDisplayed != []}
     {#each setMenuDisplayed as setMenu}
