@@ -105,36 +105,36 @@ def seed_category():
 
 
 def seed_set_menu():
-    data = [
-        {
-            'name': 'Breakfast',
-            'totalPrice': 100,
-            'size': 10
-        },
-        {
-            'name': 'Lunch',
-            'totalPrice': 100,
-            'size': 10
-        },
-        {
-            'name': 'Dinner',
-            'totalPrice': 100,
-            'size': 10
-        },
-    ]
+    data = ['Breakfast', 'Lunch', 'Dinner']
     set_menu_ids = []
-    for row in data:
-        set_menu_id = create_set_menu(row)
+    for name in data:
+        set_menu_id = create_set_menu({'name':name})
         set_menu_ids.append(set_menu_id)
 
     return set_menu_ids
 
 
 def seed_set_item():
-    data = ['Platter One', 'Platter Two', 'Platter Three']
+    data = [
+        {
+            'name': 'Platter One',
+            'totalPrice': 100,
+            'size': 10
+        },
+        {
+            'name': 'Platter Two',
+            'totalPrice': 100,
+            'size': 10
+        },
+        {
+            'name': 'Platter Three',
+            'totalPrice': 100,
+            'size': 10
+        },
+    ]
     set_item_ids = []
-    for name in data:
-        set_item_id = create_set_item({'name': name})
+    for row in data:
+        set_item_id = create_set_item(row)
         set_item_ids.append(set_item_id)
 
     return set_item_ids

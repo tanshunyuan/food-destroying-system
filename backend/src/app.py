@@ -18,12 +18,16 @@ from model.food import Food, FoodSchema, get_all_food, get_food, create_food, ad
 from model.category import Category, CategorySchema, create_category, get_category, get_all_category
 from model.setmenu import SetMenu, SetMenuSchema, create_set_menu, get_all_setmenu
 from model.setitem import SetItem, SetItemSchema, create_set_item, add_food_to_setitem, get_all_setitem, add_setitem_to_setmenu
-from model.order import Order, OrderSchema, create_order, get_order, get_order_by_customer_id, get_all_order
+from model.order import Order, OrderSchema, create_order, get_order, get_order_by_customer_id, get_all_order, update_order_status
 
-# Create database
+#Create database
 engine = create_engine(
     'postgresql://postgres:mysecretpassword@localhost:5432/fooddestroyingsystem'
 )
+#  engine = create_engine(
+#  'postgresql://postgres:mysecretpassword@se_postgresdb/fooddestroyingsystem'
+#  )
+
 if not database_exists(engine.url):
     logger.info('Creating DB')
     create_database(engine.url)
@@ -304,3 +308,13 @@ def retrieve_order_by_customer():
     order_schema = OrderSchema()
     result = get_order_by_customer_id(customer_id)
     return jsonify(setitem_schemas.dump(result)), 200
+
+
+@app.route("/api/order", methods=['PUT'])
+def update_order_statuses():
+    data = request.get_json()
+    result = update_order_status(data)
+    if result is not None:
+        return jsonify(result), 200
+    else:
+        return 'Something went wrong when updating order', 404
