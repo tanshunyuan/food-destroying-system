@@ -14,9 +14,6 @@
     <Link to="menu">
       <div class="button">View Menu</div>
     </Link>
-    <Link to="setMenu">
-      <div class="button">View Set Menu</div>
-    </Link>
     <Link to="createCategory">
       <div class="button">Create Food Category</div>
     </Link>

@@ -1,5 +1,5 @@
 <script>
-  import { getFoods, deleteFood } from "../api";
+  import { getFoods, deleteFood,getSetMenus,getSetItems } from "../api";
   import { Link, navigate } from "svelte-routing";
   import { onMount } from "svelte";
   import { user, selectedFood } from "./../stores.js";
@@ -8,9 +8,13 @@
   import { Confirm } from "svelte-confirm";
 
   let foods = [];
+  let setMenu = [];
   let foodsDisplayed = [];
+  let setMenuDisplayed = [];
+  let setItemDisplayed = [];
   let id = 0;
   let dialogOpen = false;
+   let queryTextForSetmenu = "";
 
   let queryTextForFood = "";
   onMount(() => {
@@ -19,6 +23,19 @@
       .then(response => {
         foods = response.result;
         foodsDisplayed = response.result;
+      });
+    getSetMenus()
+      .then(r => r.json())
+      .then(response => {
+        setMenu = response.result
+        setMenuDisplayed = response.result;
+        //console.log(setMenuDisplayed)
+      });
+     getSetItems()
+      .then(r => r.json())
+      .then(response => {
+        setItemDisplayed = response;
+        console.log(response)
       });
   });
 
@@ -41,6 +58,24 @@
         navigate("/", { replace: true });
       });
   }
+
+  function searchFood() {
+    console.log(queryTextForFood);
+
+    if (queryTextForFood === "") foodsDisplayed = foods;
+    else
+      foodsDisplayed = foods.filter(e =>
+        e.name.toUpperCase().includes(queryTextForFood.toUpperCase())
+      );
+  }
+  function searchSetMenu() {
+    console.log(queryTextForSetmenu);
+    if (queryTextForSetmenu === "") setMenuDisplayed = setMenu;
+    else
+      setMenuDisplayed = setMenu.filter(e =>
+        e.name.toUpperCase().includes(queryTextForSetmenu.toUpperCase())
+      );
+  }
 </script>
 
 <style>
@@ -62,8 +97,18 @@
   }
 </style>
 
-<h1>Menu</h1>
-<table id="eventTable">
+<h1>Food Menu</h1>
+<div class="filter">
+  <label for="name">Food Name:</label>
+  <input
+    type="text"
+    on:keyup={searchFood}
+    placeholder="Search for Food Item.."
+    title="Type in a Food name"
+    id="searchFood"
+    bind:value={queryTextForFood} />
+</div>
+<table id="foodTable">
   <tr>
     <th>food Name</th>
     <th>description</th>
@@ -128,3 +173,56 @@
   {/if}
 
 </table>
+
+<h1>Set Menu</h1>
+<div class="filter">
+  <label for="name">Set Item Name:</label>
+  <input
+    type="text"
+    on:keyup={searchSetMenu}
+    placeholder="Search for Set Item.."
+    title="Type in a Set Item name"
+    id="searchSetItem"
+    bind:value={queryTextForSetmenu} />
+</div>
+<table id="foodTable">
+  <tr>
+    <th>Set Name</th>
+    <th>price</th>
+    <th>size</th>
+     {#if $user.role === 'customer'}
+    <th>action</th>
+    {/if}
+  </tr>
+  {#if setMenuDisplayed != []}
+    {#each setMenuDisplayed as setMenu}
+      <tr>
+        <td colspan="5" class="tableData" style="text-align: center">{setMenu.name}</td>
+        {#each setItemDisplayed as setItem}
+          {#if setItem.setmenu_id == setMenu.id}
+          <td class="tableData">{setItem.name}</td>
+        <td class="tableData">{setItem.totalPrice}</td>
+        <td class="tableData">{setItem.size}</td>
+         <td>
+          <div>
+            {#if $user.role === 'customer'}
+              <button>
+                <img src="./../../public/cart.png" alt="Add to Cart" />
+              </button>
+            {/if}
+          </div>
+        </td> 
+        {/if}
+        {/each}
+      </tr>
+    {/each}
+  {:else}
+    <tr>
+      <td colspan="100%">
+        <h5 class="text-center">There are no set menus.</h5>
+      </td>
+    </tr>
+  {/if}
+
+</table>
+
