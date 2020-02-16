@@ -50,7 +50,6 @@ export const postCategory = (payload) => postRequest(paths.category, payload);
 export const postFoodToCategory = (payload) => postRequest(paths.addcategorytofood, payload);
 export const postOrder = (payload) => postRequest(paths.postOrder, payload);
 export const postSetMenu = (payload) => postRequest(paths.setmenu, payload);
-export const postFoodToCategory = (payload) => postRequest(paths.addcategorytofood, payload);
 export const postSetitemToSetmenu= (payload) => postRequest(paths.addsetitemtosetmenu, payload);
 export const postFoodToSetitem= (payload) => postRequest(paths.addfoodtosetitem, payload);
 
@@ -58,8 +57,6 @@ export const getManagers = () => getRequest(paths.manager);
 export const getEmployees = () => getRequest(paths.employee);
 export const getFoods = () => getRequest(paths.getfood);
 export const getCategorys = () => getRequest(paths.getcategory);
-
-export const updateFood = (payload) => putRequest(paths.food, payload);
 
 export const getSetItems = () => getRequest(paths.getsetitems);
 export const getSetMenus= () => getRequest(paths.getsetmenu);

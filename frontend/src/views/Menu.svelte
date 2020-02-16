@@ -14,7 +14,7 @@
   let setItemDisplayed = [];
   let id = 0;
   let dialogOpen = false;
- let queryTextForSetmenu = "";
+  let queryTextForSetmenu = "";
 
   let queryTextForFood = "";
   onMount(() => {
@@ -62,25 +62,31 @@
   function addToCart(food) {
     cart.set([...$cart, food.id]);
     console.info($cart);
+  }
 
   function searchFood() {
     console.log(queryTextForFood);
 
     if (queryTextForFood === "") foodsDisplayed = foods;
-    else
-      foodsDisplayed = foods.filter(e =>
+    else {
+foodsDisplayed = foods.filter(e =>
         e.name.toUpperCase().includes(queryTextForFood.toUpperCase())
       );
-  }
+
+    }
+        }
 
   function searchSetMenu() {
     console.log(queryTextForSetmenu);
     if (queryTextForSetmenu === "") setMenuDisplayed = setMenu;
-    else
-      setMenuDisplayed = setMenu.filter(e =>
+    else {
+    setMenuDisplayed = setMenu.filter(e =>
         e.name.toUpperCase().includes(queryTextForSetmenu.toUpperCase())
       );
+    }
+      
   }
+
 </script>
 
 <style>
@@ -102,6 +108,7 @@
   }
 </style>
 
+<div class="content">
 <h1>Food Menu</h1>
 <div class="filter">
   <label for="name">Food Name:</label>
@@ -230,4 +237,6 @@
   {/if}
 
 </table>
+
+</div>
 
