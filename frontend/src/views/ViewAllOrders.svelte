@@ -3,18 +3,32 @@
 <!-- Chef:  Allow options to prepare order & ready order -->
 <!-- Manager: View all orders made -->
 <script>
-    import { OrderState } from "../components/OrderState.js";
-    import { Order } from "../components/OrderState.js";
-    import { state } from "../components/OrderState.js";
-    import { currentTime } from "../components/OrderState.js";
+    import { OrderState, Order, currentTime } from "../components/OrderState.js";
     import { user } from "./../stores.js";
     import { onMount } from "svelte";
-    import { getOrders } from '../api';
+    import { getOrders, updateOrderStatus } from '../api';
+    import axios from "axios";
 
     let orders = [];
 
     // Get all orders
     onMount(() => {
+        // DEBUG MODE: CHANGE STATE OF ORDER TO NEW
+        // axios
+        // .put(`${process.env.API_URL}api/order`, {
+        //     id: '1',
+        //     orderStatus: 'new'
+        // })
+        // .then(
+        //     response => { 
+        //         console.log(response)
+        //     },
+        //     error => {
+        //         console.log(error);
+        //         errorMsg = "Order cannot be updated.";
+        //     }
+        // );
+        
         getOrders()
         .then(r => r.json())
         .then(response => {
@@ -26,17 +40,21 @@
         return time.slice(11, 19);
     }
 
-    // function chefAcceptsOrder() {
-    //     changeState(order, state)
-    //     .then(
-    //     response => {
-    //         console.log(response);
-    //     },
-    //     error => {
-    //         console.log(error);
-    //         errorMsg = "Error updating states!";
-    //     });
-    // }
+    function getCurrentState(order) {
+        var state = new OrderState(order);
+        return state;
+    }
+
+    function getDisplayedOrders(orders) {
+        let displayedOrders = [];
+        for (var i = 0; i < orders.length; i++) {
+            if (orders[i].orderStatus === 'new' || orders[i].orderStatus === 'preparing') {
+                displayedOrders.push(orders[i]);
+            }
+        }
+        console.log(displayedOrders)
+        return displayedOrders;
+    }
 </script>
   
 <div class="content">
@@ -45,14 +63,13 @@
     <br>
     <table id="eventTable">
 
+    {#if getDisplayedOrders(orders).length != 0}
     <tr>
         <th>Time Ordered</th>
         <th>Ordered Items</th>
         <th>Actions</th>
     </tr>
-
-    {#if orders != []}
-        {#each orders as order}
+        {#each getDisplayedOrders(orders) as order}
         <tr>
             <td class="tableData">{convertToTime(order.createdDateTime)}</td>
             <td class="tableData">
@@ -63,21 +80,23 @@
             <td>
             <div>
                 {#if $user.role === 'employee'}
-                    {#if state.current.order === 'new'}
-                    <button on:click={state.change()}>Prepare Order 🔥</button>
+                    {#if order.orderStatus === 'new'}
+                    <button on:click={getCurrentState(order).current.chefAcceptsOrder(order, getCurrentState(order))}>Prepare Order 🔥</button>
                     {/if}
-                    {#if state.current.order === 'preparing'}
-                    <button on:click={state.current.chefUpdateOrder()}>Ready 👍</button>
+
+                    {#if order.orderStatus === 'preparing'}
+                    <button on:click={getCurrentState(order).current.chefUpdateOrder(order, getCurrentState(order))}>Ready 👍</button>
                     {/if}
                 {/if}
             </div>
             </td>
         </tr>
         {/each}
+    
     {:else}
         <tr>
         <td colspan="100%">
-            <h5 class="text-center">There are no new orders at the moment.</h5>
+            <h5>There are no new orders at the moment.</h5>
         </td>
         </tr>
     {/if}
@@ -100,5 +119,8 @@ td,
 th {
     text-align: left;
     word-wrap: break-word;
+}
+h5 {
+    text-align: center;
 }
 </style>

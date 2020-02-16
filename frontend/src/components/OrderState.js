@@ -1,8 +1,10 @@
 // Using the State design pattern for an Order object
 // This file manages their states
 
+import axios from "axios";
+
 export class OrderState {
-    constructor() {
+    constructor(order) {
         this.states = [
             new NewOrder(), 
             new PreparingOrder(), 
@@ -13,11 +15,35 @@ export class OrderState {
         ];
 
         // set default state
-        this.current = this.states[0];
+        if (order === undefined) {
+            this.current = this.states[0];
+        }
+        else {
+            switch (order.orderStatus) {
+                case 'new':
+                    this.current = this.states[0];
+                    break;
+                case 'preparing':
+                    this.current = this.states[1];
+                    break;
+                case 'ready':
+                    this.current = this.states[2];
+                    break;
+                case 'dispatched':
+                    this.current = this.states[3];
+                    break;
+                case 'delivered':
+                    this.current = this.states[4];
+                    break;
+                case 'cancelled':
+                    this.current = this.states[5];
+                    break;
+            }
+        }
     }
 
     // change state
-    change(state) {
+    change(order, state) {
         const totalStates = this.states.length;
         let currentIndex = this.states.findIndex(order => order === this.current);
         
@@ -30,10 +56,21 @@ export class OrderState {
             else
                 this.current = this.states[0];
         }
-    }
 
-    sign() {
-        return this.current.sign();
+        axios
+        .put(`${process.env.API_URL}api/order`, {
+            id: order.id,
+            orderStatus: this.current.order
+        })
+        .then(
+            response => { 
+                console.log(response)
+            },
+            error => {
+                console.log(error);
+                errorMsg = "Order cannot be updated.";
+            }
+        );
     }
 }
 
@@ -48,12 +85,9 @@ class NewOrder extends Order {
         super('new');
     }
 
-    sign() {
-        return 'NEW';
-    }
-
-    chefAcceptsOrder() {
-        state.change(new PreparingOrder());
+    chefAcceptsOrder(order, state) {
+        state.change(order, new PreparingOrder());
+        location.reload(true);
     }
 }
 
@@ -62,17 +96,14 @@ class PreparingOrder extends Order {
         super('preparing');
     }
 
-    sign() {
-        return 'PREPARING';
+    chefUpdateOrder(order, state) {
+        state.change(order, new ReadyOrder());
+        location.reload(true);
     }
 
-    chefUpdateOrder() {
-        state.change(new ReadyOrder());
-    }
-
-    cancelOrder() {
+    cancelOrder(order, state) {
         if (currentTime() > timeOrdered)
-            state.change(new CancelledOrder());
+            state.change(order, new CancelledOrder());
         else
             return "Order cannot be cancelled!";
     }
@@ -83,17 +114,13 @@ class ReadyOrder extends Order {
         super('ready');
     }
 
-    sign() {
-        return 'READY';
+    dispatcherAcceptsOrder(order, state) {
+        state.change(order, new DispatchedOrder());
     }
 
-    dispatcherAcceptsOrder() {
-        state.change(new DispatchedOrder());
-    }
-
-    cancelOrder() {
+    cancelOrder(order, state) {
         if (currentTime() > timeOrdered)
-            state.change(new CancelledOrder());
+            state.change(order, new CancelledOrder());
         else
             return "Order cannot be cancelled!";
     }
@@ -104,17 +131,13 @@ class DispatchedOrder extends Order {
         super('dispatched');
     }
 
-    sign() {
-        return 'DISPATCHED';
+    updateDeliveryStatus(order, state) {
+        state.change(order, new DeliveredOrder());
     }
 
-    updateDeliveryStatus() {
-        state.change(new DeliveredOrder());
-    }
-
-    cancelOrder() {
+    cancelOrder(order, state) {
         if (currentTime() > timeOrdered)
-            state.change(new CancelledOrder());
+            state.change(order, new CancelledOrder());
         else
             return "Order cannot be cancelled!";
     }
@@ -124,19 +147,11 @@ class DeliveredOrder extends Order {
     constructor() {
         super('delivered');
     }
-
-    sign() {
-        return 'DELIVERED';
-    }
 }
 
 class CancelledOrder extends Order {
     constructor() {
         super('cancelled');
-    }
-
-    sign() {
-        return 'CANCELLED';
     }
 }
 
@@ -145,5 +160,3 @@ export function currentTime() {
     var currentTime = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     return currentTime;
 }
-
-export let state = new OrderState;
