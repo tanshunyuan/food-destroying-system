@@ -108,7 +108,7 @@ def seed_set_menu():
     data = ['Breakfast', 'Lunch', 'Dinner']
     set_menu_ids = []
     for name in data:
-        set_menu_id = create_set_menu({'name':name})
+        set_menu_id = create_set_menu({'name': name})
         set_menu_ids.append(set_menu_id)
 
     return set_menu_ids
@@ -142,9 +142,9 @@ def seed_set_item():
 
 def seed_customer():
     data = {
-        'name': 'Saitama',
-        'address': 'Okinawa',
-        'email': 'saitama@gmail.com',
+        'name': 'customer',
+        'address': 'Washinton state',
+        'email': 'customer@gmail.com',
         'contactNumber': 123456,
         'password': 'password'
     }

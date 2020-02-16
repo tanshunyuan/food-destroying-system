@@ -23,10 +23,8 @@ from model.order import Order, OrderSchema, create_order, get_order, get_order_b
 #Create database
 engine = create_engine(
     'postgresql://postgres:mysecretpassword@localhost:5432/fooddestroyingsystem'
+    #'postgresql://postgres:mysecretpassword@se_postgresdb/fooddestroyingsystem'
 )
-#  engine = create_engine(
-#  'postgresql://postgres:mysecretpassword@se_postgresdb/fooddestroyingsystem'
-#  )
 
 if not database_exists(engine.url):
     logger.info('Creating DB')
@@ -300,7 +298,7 @@ def retrieve_orders():
     order_schemas = OrderSchema(many=True)
     result = get_all_order()
     return jsonify(order_schemas.dump(result)), 200
-    
+
 
 @app.route("/api/order/customer", methods=['GET'])
 def retrieve_order_by_customer():
