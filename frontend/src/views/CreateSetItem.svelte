@@ -4,7 +4,7 @@
   import { userMessage, user } from "./../stores.js";
   import { Link, navigate } from "svelte-routing";
   import { NotificationDisplay, notifier } from "@beyonk/svelte-notifications";
-  import { getFoods } from "../api";
+  import { getSetMenus, getFoods, postFoodToSetitem, postSetitemToSetmenu} from "../api";
   import Select from "svelte-select";
   import axios from "axios";
 
@@ -12,10 +12,13 @@
     setTotalPrice = 0,
     setSize = 1,
     allFoods = [],
+    allSetMenus = [],
     errorMsg = "",
-    selectedValue = undefined,
+    selectedSetMenuValues = undefined,
+    selectedFoodValues= undefined,
     n,
-    items = [];
+    foods = [],
+    setmenus = []
 
   onMount(() => {
     getFoods()
@@ -24,8 +27,22 @@
         allFoods = response.result;
         allFoods.forEach(element => {
           console.log(element["id"].toString());
-          length = items.length;
-          items[length] = {
+          length = foods.length;
+          foods[length] = {
+            value: element["id"],
+            label: element["name"]
+          };
+        });
+      });
+
+    getSetMenus()
+      .then(r => r.json())
+      .then(response => {
+        allSetMenus = response.result;
+        allSetMenus.forEach(element => {
+          console.log(element["id"].toString());
+          length = setmenus.length;
+          setmenus[length] = {
             value: element["id"],
             label: element["name"]
           };
@@ -33,12 +50,12 @@
       });
   });
 
-  function createFood(event) {
+  function createSetItem(event) {
     //get location
     event.preventDefault();
     if (setName != "") {
       if (setTotalPrice > -1) {
-        if (selectedValue != undefined) {
+        if (selectedFoodValues!= undefined) {
           if (setSize > 0) {
             axios
               .post(`${process.env.API_URL}api/setitem`, {
@@ -48,8 +65,8 @@
               })
               .then(
                 response => {
-                 // addFoodItems(response.data["setitem_id"]);
-                 console.log(response)
+                  addFoodToSetitem(response.data["setitem_id"]);
+                  addSetItemToSetMenu(response.data["setitem_id"])
                   //navigate("/", { replace: true });
                 },
                 error => {
@@ -71,13 +88,15 @@
     }
   }
 
-  function addFoodItems(setid) {
+  function addFoodToSetitem(setitem_id) {
+    const food_ids = selectedFoodValues.map(objects => objects.value)
     var newAddition = {
-      food_id: foodid,
-      category_id: selectedValue.value
+      setitem_id: setitem_id,
+      food_ids: food_ids
     };
+    console.log(newAddition)
 
-    postFoodToCategory(newAddition).then(
+    postFoodToSetitem(newAddition).then(
       response => {
         console.log(response);
         navigate("/", { replace: true });
@@ -87,6 +106,30 @@
         errorMsg = "Error adding food to category";
       }
     );
+  }
+
+  function addSetItemToSetMenu(setitem_id) {
+    var newAddition = {
+      setmenu_id:selectedSetMenuValues.value,
+      setitem_id:setitem_id
+    };
+
+    postSetitemToSetmenu(newAddition).then(
+      response => {
+        console.log(response);
+        navigate("/", { replace: true });
+      },
+      error => {
+        console.log(error);
+        errorMsg = "Error adding set item to set menu";
+      }
+    );
+  }
+  function handleFoodSelect(foods) {
+    selectedFoodValues = foods.detail
+  }
+  function handleSetMenuSelect(setmenu) {
+    selectedSetMenuValues = setmenu.detail
   }
 </script>
 
@@ -121,13 +164,13 @@
 
 <div class="content">
   <div class="form">
-    <h2>Create Set Menu</h2>
+    <h2>Create Set Items</h2>
     Name:
     <br />
     <input
       name="food name"
       type="text"
-      placeholder="Set Name"
+      placeholder="Set Item Name"
       bind:value={setName} />
     <br />
     Price:
@@ -139,7 +182,13 @@
     Food:
     <br />
     <div class="Select">
-      <Select {items} isMulti={true} bind:selectedValue />
+      <Select items={foods} isMulti={true} on:select={handleFoodSelect}/>
+    </div>
+    <br />
+    Set Menu:
+    <br />
+    <div class="Select">
+      <Select items={setmenus} on:select={handleSetMenuSelect}/>
     </div>
     <br />
     <p style="color: red;">{errorMsg}</p>
@@ -151,7 +200,7 @@
       class="formButton"
       type="submit"
       value="Submit"
-      on:click={createFood}>
+      on:click={createSetItem}>
       Submit
     </button>
   </div>
