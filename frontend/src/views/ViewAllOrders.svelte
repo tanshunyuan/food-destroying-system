@@ -49,9 +49,7 @@
     function getDisplayedOrders(orders) {
         let displayedOrders = [];
         for (var i = 0; i < orders.length; i++) {
-            if (orders[i].orderStatus === 'new' || orders[i].orderStatus === 'preparing') {
-                displayedOrders.push(orders[i]);
-            }
+                displayedOrders.push(orders[i])
         }
         console.log(displayedOrders)
         return displayedOrders;
@@ -73,7 +71,6 @@
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
-
             {#each getDisplayedOrders(orders) as order}
             <tr>
                 <!-- Time -->
@@ -115,6 +112,7 @@
     <!-- MANAGER -->
     {#if $user.role === 'manager'}
         <select bind:value={statusFilter}>
+          <option value="all">All</option>
           <option value="new">New</option>
           <option value="preparing">Preparing</option>
           <option value="ready">Ready</option>
@@ -128,7 +126,7 @@
                 <th>Ordered Items</th>
                 <th>Status</th>
             </tr>
-
+            {#if statusFilter == 'all'}
             {#each orders as order}
             <tr>
                 <!-- Time -->
@@ -145,6 +143,26 @@
                 <td>{order.orderStatus}</td>
             </tr>
             {/each}
+            {/if}
+            {#if statusFilter == 'new'}
+            {#each orders as order}
+            <tr>
+                <!-- Time -->
+                <td class="tableData">{convertToTime(order.createdDateTime)}</td>
+                
+                <!-- Ordered Items -->
+                <td class="tableData">
+                {#each order.orderedItems as item}
+                    {item.name}<br>
+                {/each}
+                </td>
+
+                <!-- Status -->
+                <td>{order.orderStatus}</td>
+            </tr>
+            {/each}
+            {/if}
+
         {:else}
         <tr>
         <td colspan="100%">
