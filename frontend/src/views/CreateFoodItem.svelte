@@ -19,19 +19,55 @@
     n,
     items = [];
 
+  var Iterator = function(iteratorItems) {
+    this.index = 0;
+    this.iteratorItems = iteratorItems;
+  };
+
+  Iterator.prototype = {
+    first: function() {
+      this.reset();
+      return this.next();
+    },
+    next: function() {
+      return this.iteratorItems[this.index++];
+    },
+    hasNext: function() {
+      return this.index <= this.iteratorItems.length;
+    },
+    reset: function() {
+      this.index = 0;
+    },
+    each: function(callback) {
+      for (var item = this.first(); this.hasNext(); item = this.next()) {
+        callback(item);
+      }
+    }
+  };
+  function run() {
+    var iter = new Iterator(allCategories);
+    iter.each(function(item) {
+      length = items.length;
+      items[length] = {
+        value: item["id"],
+        label: item["name"]
+      };
+    });
+  }
   onMount(() => {
     getCategorys()
       .then(r => r.json())
       .then(response => {
         allCategories = response.result;
-        allCategories.forEach(element => {
-          console.log(element["id"].toString());
-          length = items.length;
-          items[length] = {
-            value: element["id"],
-            label: element["name"]
-          };
-        });
+        run()
+        // allCategories.forEach(element => {
+        //   console.log(element["id"].toString());
+        //   length = items.length;
+        //   items[length] = {
+        //     value: element["id"],
+        //     label: element["name"]
+        //   };
+        // });
       });
   });
 
@@ -53,11 +89,11 @@
                 })
                 .then(
                   response => {
-                    addCategory(response.data["food_id"])
+                    addCategory(response.data["food_id"]);
                   },
                   error => {
                     console.log(error);
-                    errorMsg = 'Food with the same name already exist';
+                    errorMsg = "Food with the same name already exist";
                   }
                 );
             } else {
@@ -78,21 +114,21 @@
   }
 
   function addCategory(foodid) {
-            var newAddition = {
-              "food_id": foodid,
-              "category_id": selectedValue.value
-            }
+    var newAddition = {
+      food_id: foodid,
+      category_id: selectedValue.value
+    };
 
-            postFoodToCategory(newAddition).then(
-              response => {
-                console.log(response);
-                navigate("/", { replace: true });
-              },
-              error => {
-                console.log(error);
-                errorMsg = "Error adding food to category";
-              }
-            );
+    postFoodToCategory(newAddition).then(
+      response => {
+        console.log(response);
+        navigate("/", { replace: true });
+      },
+      error => {
+        console.log(error);
+        errorMsg = "Error adding food to category";
+      }
+    );
   }
 </script>
 
