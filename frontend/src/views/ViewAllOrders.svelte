@@ -10,6 +10,7 @@
     import axios from "axios";
 
     let orders = [];
+    let statusFilter = '';
 
     // Get all orders
     onMount(() => {
@@ -48,9 +49,7 @@
     function getDisplayedOrders(orders) {
         let displayedOrders = [];
         for (var i = 0; i < orders.length; i++) {
-            if (orders[i].orderStatus === 'new' || orders[i].orderStatus === 'preparing') {
-                displayedOrders.push(orders[i]);
-            }
+                displayedOrders.push(orders[i])
         }
         console.log(displayedOrders)
         return displayedOrders;
@@ -72,7 +71,6 @@
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
-
             {#each getDisplayedOrders(orders) as order}
             <tr>
                 <!-- Time -->
@@ -113,13 +111,22 @@
 
     <!-- MANAGER -->
     {#if $user.role === 'manager'}
+        <select bind:value={statusFilter}>
+          <option value="all">All</option>
+          <option value="new">New</option>
+          <option value="preparing">Preparing</option>
+          <option value="ready">Ready</option>
+          <option value="dispatched">Dispatched</option>
+          <option value="delivered">Delivered</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
         {#if orders.length != 0}
             <tr>
                 <th>Time Ordered</th>
                 <th>Ordered Items</th>
                 <th>Status</th>
             </tr>
-
+            {#if statusFilter == 'all' || statusFilter == 'new'}
             {#each orders as order}
             <tr>
                 <!-- Time -->
@@ -136,6 +143,8 @@
                 <td>{order.orderStatus}</td>
             </tr>
             {/each}
+            {/if}
+
         {:else}
         <tr>
         <td colspan="100%">

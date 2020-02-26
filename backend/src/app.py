@@ -20,10 +20,10 @@ from model.setmenu import SetMenu, SetMenuSchema, create_set_menu, get_all_setme
 from model.setitem import SetItem, SetItemSchema, create_set_item, add_food_to_setitem, get_all_setitem, add_setitem_to_setmenu
 from model.order import Order, OrderSchema, create_order, get_order, get_order_by_customer_id, get_all_order, update_order_status
 
-#Create database
+# Create database
 engine = create_engine(
-    'postgresql://postgres:mysecretpassword@localhost:5432/fooddestroyingsystem'
-    #'postgresql://postgres:mysecretpassword@se_postgresdb/fooddestroyingsystem'
+    # 'postgresql://postgres:mysecretpassword@localhost:5432/fooddestroyingsystem'
+    'postgresql://postgres:mysecretpassword@se_postgresdb/fooddestroyingsystem'
 )
 
 if not database_exists(engine.url):
@@ -108,7 +108,7 @@ def retrieve_employee():
 
 @app.route("/api/food", methods=['POST'])
 def new_food():
-    data = request.get_json()   
+    data = request.get_json()
     result = create_food(data)
     if result is not None:
         return jsonify(food_id=result), 200
