@@ -22,8 +22,7 @@ from model.order import Order, OrderSchema, create_order, get_order, get_order_b
 
 # Create database
 engine = create_engine(
-    # 'postgresql://postgres:mysecretpassword@localhost:5432/fooddestroyingsystem'
-    'postgresql://postgres:mysecretpassword@se_postgresdb/fooddestroyingsystem'
+    'postgresql://postgres:mysecretpassword@localhost:5432/fooddestroyingsystem'
 )
 
 if not database_exists(engine.url):

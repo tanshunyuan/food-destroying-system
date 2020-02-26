@@ -49,6 +49,7 @@
     function getDisplayedOrders(orders) {
         let displayedOrders = [];
         for (var i = 0; i < orders.length; i++) {
+            if (orders[i].orderStatus === 'new' || orders[i].orderStatus === 'preparing')
                 displayedOrders.push(orders[i])
         }
         console.log(displayedOrders)
