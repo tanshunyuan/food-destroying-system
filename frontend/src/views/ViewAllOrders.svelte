@@ -126,25 +126,7 @@
                 <th>Ordered Items</th>
                 <th>Status</th>
             </tr>
-            {#if statusFilter == 'all'}
-            {#each orders as order}
-            <tr>
-                <!-- Time -->
-                <td class="tableData">{convertToTime(order.createdDateTime)}</td>
-                
-                <!-- Ordered Items -->
-                <td class="tableData">
-                {#each order.orderedItems as item}
-                    {item.name}<br>
-                {/each}
-                </td>
-
-                <!-- Status -->
-                <td>{order.orderStatus}</td>
-            </tr>
-            {/each}
-            {/if}
-            {#if statusFilter == 'new'}
+            {#if statusFilter == 'all' || statusFilter == 'new'}
             {#each orders as order}
             <tr>
                 <!-- Time -->
